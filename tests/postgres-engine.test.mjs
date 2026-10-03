@@ -84,8 +84,10 @@ test('Embedded PostgreSQL verifies actual migrations, JSONB persistence and tran
     const tables = await engine.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'tss' ORDER BY table_name");
     assert.deepEqual(tables.rows.map(row => row.table_name), ['activities', 'attachments', 'audit', 'costs', 'customers', 'drivers', 'incidents', 'invoices', 'jobs', 'metadata', 'mobile_operations', 'opportunities', 'quotes', 'schema_migrations', 'users', 'vehicles', 'work_orders', 'yard']);
     const before = await engine.query('SELECT version, checksum FROM tss.schema_migrations ORDER BY version');
-    assert.deepEqual(before.rows.map(row => row.version), [1, 2]);
-    for (const migration of before.rows) assert.match(migration.checksum, /^[a-f0-9]{64}$/);
+    assert.deepEqual(before.rows, [
+      { version: 1, checksum: '0ed53f2dbaacf0e5066767b125612185969db3f247617310b02a41767ed68844' },
+      { version: 2, checksum: '851b14eb1c7f422ddb724a0740961527831e395764c23737ef68f0923ebb4ee3' },
+    ]);
     await repository.applyMigrations();
     assert.deepEqual((await engine.query('SELECT version, checksum FROM tss.schema_migrations ORDER BY version')).rows, before.rows);
   });
