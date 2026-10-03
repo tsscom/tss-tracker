@@ -1,0 +1,38 @@
+{
+  "name": "tss-transport-job-tracker",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Piloto local TSS Gestão: CRM, transportes, parque, oficina e recebimentos",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node tools/pipeline.mjs dev",
+    "dev:check": "node tools/pipeline.mjs dev-check",
+    "docker:check": "node tools/pipeline.mjs docker-check",
+    "staging:up": "node tools/pipeline.mjs staging-up",
+    "staging:test": "node tools/pipeline.mjs staging-test",
+    "staging:check": "node tools/pipeline.mjs staging-check",
+    "staging:deploy": "node tools/pipeline.mjs staging-deploy",
+    "staging:smoke": "node tools/pipeline.mjs staging-smoke",
+    "staging:logs": "node tools/pipeline.mjs staging-logs",
+    "staging:down": "node tools/pipeline.mjs staging-down",
+    "staging:certificate": "node tools/pipeline.mjs staging-certificate",
+    "production:check": "node tools/pipeline.mjs production-check",
+    "production:deploy": "node tools/pipeline.mjs production-deploy",
+    "production:import": "node tools/pipeline.mjs production-import",
+    "production:smoke": "node tools/pipeline.mjs production-smoke",
+    "test": "node --test tests/*.test.mjs",
+    "db:migrate": "node tools/postgres-migrate.mjs",
+    "test:postgres": "node --test tests/postgres*.test.mjs"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8"
+  }
+}

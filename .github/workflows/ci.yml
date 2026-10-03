@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-bookworm
+        env:
+          POSTGRES_DB: tss_ci
+          POSTGRES_USER: tss_ci
+          POSTGRES_PASSWORD: ci-tests-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tss_ci -d tss_ci"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      ENV_FILE: ""
+      TSS_TEST_DATABASE_URL: postgresql://tss_ci:ci-tests-only@127.0.0.1:5432/tss_ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Set up pnpm
+        run: npm install --global pnpm@11.25.0
+      - name: Configure dependency cache
+        run: pnpm config set store-dir .pnpm-store
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: .pnpm-store
+          key: ${{ runner.os }}-node24-pnpm11-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run all tests including PostgreSQL
+        run: pnpm test
+      - name: Validate staging configuration
+        run: docker compose --project-name tss-ci --profile tools config --quiet
+      - name: Build production image
+        run: docker build --target production --tag tss-tracker:ci .
+      - name: Run tests in the Linux container
+        run: docker compose --project-name tss-ci run --rm --build test
+      - name: Start staging
+        run: docker compose --project-name tss-ci up --detach --build --wait --wait-timeout 180 app proxy
+      - name: Check mounted storage permissions
+        run: docker compose --project-name tss-ci exec --user node app node -e "require('node:fs').accessSync('/var/data/attachments', require('node:fs').constants.W_OK)"
+      - name: Smoke test staging over HTTPS
+        run: |
+          docker compose --project-name tss-ci cp proxy:/data/caddy/pki/authorities/local/root.crt /tmp/tss-staging-root.crt
+          NODE_EXTRA_CA_CERTS=/tmp/tss-staging-root.crt node tools/smoke.mjs https://localhost:8443
+      - name: Show staging logs on failure
+        if: failure()
+        run: docker compose --project-name tss-ci --profile tools logs --no-color
+      - name: Stop staging
+        if: always()
+        run: docker compose --project-name tss-ci --profile tools down

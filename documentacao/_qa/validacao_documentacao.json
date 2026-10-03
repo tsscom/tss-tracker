@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-30",
+  "requirements": 39,
+  "stories": 44,
+  "acceptance_criteria": 88,
+  "proposed_sprints": 10,
+  "traceability": "passed: bidirectional requirement-story links and dependency identifiers",
+  "pdf_visual_review": "All 43 final pages inspected at original image resolution; no overflow, clipping or unreadable tables found.",
+  "docx_layout": "Unverified: canonical renderer could not locate bundled LibreOffice. PDFs were authored and rendered independently.",
+  "artifacts": [
+    {
+      "name": "01_Requisitos_e_governacao.pdf",
+      "pages": 12,
+      "sha256": "92ba92b6292231d73a72744334264bb633d9b5df5884b5e3aadf9844ed695ca4",
+      "docx_source": "01_Requisitos_e_governacao.docx",
+      "docx_sha256": "58eb16ca6fd11a1cacc911779810155460b4fdd4ab796ec1c0d47d201a51ff66"
+    },
+    {
+      "name": "02_Procedimentos_operacionais.pdf",
+      "pages": 15,
+      "sha256": "cee25a88da7e615af00ce556db1690b802f6f71d95e93d4f0f1e46d315067580",
+      "docx_source": "02_Procedimentos_operacionais.docx",
+      "docx_sha256": "eab3328733e5b5cb35ca46e812d8887f0054521e923b8764bf2e8ccd26d56e89"
+    },
+    {
+      "name": "03_Backlog_e_plano_de_sprints.pdf",
+      "pages": 16,
+      "sha256": "fb538a6577dcf6ed1fd23f4751ecfd9f188abc7d7067a41b17eb96ab7072d479",
+      "docx_source": "03_Backlog_e_plano_de_sprints.docx",
+      "docx_sha256": "f272ede67821f1066b05ac816369bfde5bf0ee4a578088209ad51283093a8075"
+    }
+  ]
+}

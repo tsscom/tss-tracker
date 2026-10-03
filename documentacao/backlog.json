@@ -1,0 +1,862 @@
+{
+  "version": "1.0",
+  "date": "2026-09-30",
+  "owner": "Sergiu Sandu",
+  "cadence": "Two weeks proposed",
+  "stories": [
+    {
+      "id": "US01",
+      "module": "Acessos",
+      "role": "gerente",
+      "goal": "criar a minha conta inicial sem contas partilhadas",
+      "benefit": "identificar cada ação",
+      "criteria": [
+        "A primeira configuração cria apenas Sergiu com credencial escolhida.",
+        "Novo arranque mantém a conta e não repete a configuração."
+      ],
+      "priority": "P0",
+      "sprint": 1,
+      "requirements": [
+        "REQ01"
+      ],
+      "dependency": "",
+      "phase": "Local"
+    },
+    {
+      "id": "US02",
+      "module": "Acessos",
+      "role": "utilizador",
+      "goal": "entrar sair e mudar a palavra passe",
+      "benefit": "proteger o acesso",
+      "criteria": [
+        "Credencial errada é recusada; palavra passe não fica em texto simples.",
+        "Saída e expiração impedem novos pedidos com sessão inválida."
+      ],
+      "priority": "P0",
+      "sprint": 1,
+      "requirements": [
+        "REQ02"
+      ],
+      "dependency": "US01",
+      "phase": "Local"
+    },
+    {
+      "id": "US03",
+      "module": "Acessos",
+      "role": "administrador",
+      "goal": "atribuir perfis e desativar contas",
+      "benefit": "manter responsabilidades atuais",
+      "criteria": [
+        "Perfis válidos são guardados e usados pelo servidor.",
+        "Conta desativada perde acesso e conserva histórico."
+      ],
+      "priority": "P0",
+      "sprint": 1,
+      "requirements": [
+        "REQ03"
+      ],
+      "dependency": "US01",
+      "phase": "Local"
+    },
+    {
+      "id": "US04",
+      "module": "Acessos",
+      "role": "motorista",
+      "goal": "consultar apenas os meus serviços",
+      "benefit": "proteger dados de outros serviços",
+      "criteria": [
+        "Serviço atribuído é acessível no ecrã e na API.",
+        "Identificador de serviço alheio é recusado e não aparece no CSV."
+      ],
+      "priority": "P0",
+      "sprint": 1,
+      "requirements": [
+        "REQ03"
+      ],
+      "dependency": "US03",
+      "phase": "Local"
+    },
+    {
+      "id": "US05",
+      "module": "Aprovações",
+      "role": "gerente",
+      "goal": "decidir pedidos com separação de funções",
+      "benefit": "tornar a decisão verificável",
+      "criteria": [
+        "Autoaprovação normal é recusada.",
+        "Exceção explícita do proprietário exige 20 caracteres e grava requerente, ator, data e motivo."
+      ],
+      "priority": "P0",
+      "sprint": 2,
+      "requirements": [
+        "REQ04"
+      ],
+      "dependency": "US03",
+      "phase": "Local"
+    },
+    {
+      "id": "US06",
+      "module": "Histórico",
+      "role": "auditor",
+      "goal": "consultar decisões e alterações",
+      "benefit": "seguir a origem de um registo",
+      "criteria": [
+        "Ação autorizada gera evento ligado à entidade e ao ator.",
+        "Auditor consulta histórico e não altera registos."
+      ],
+      "priority": "P0",
+      "sprint": 2,
+      "requirements": [
+        "REQ05"
+      ],
+      "dependency": "US03",
+      "phase": "Local"
+    },
+    {
+      "id": "US07",
+      "module": "CRM",
+      "role": "comercial",
+      "goal": "registar uma ficha de cliente",
+      "benefit": "reutilizar os dados comerciais",
+      "criteria": [
+        "Campos essenciais validados e pesquisa antes da criação.",
+        "Cliente mantém identificador estável em cotações e serviços."
+      ],
+      "priority": "P0",
+      "sprint": 2,
+      "requirements": [
+        "REQ07"
+      ],
+      "dependency": "US03",
+      "phase": "Local"
+    },
+    {
+      "id": "US08",
+      "module": "CRM",
+      "role": "comercial",
+      "goal": "acompanhar oportunidades e contactos",
+      "benefit": "saber o próximo passo comercial",
+      "criteria": [
+        "Cada oportunidade tem etapa, responsável e tarefa seguinte.",
+        "Contacto fica ligado ao cliente com data e resultado."
+      ],
+      "priority": "P1",
+      "sprint": 2,
+      "requirements": [
+        "REQ08"
+      ],
+      "dependency": "US07",
+      "phase": "Produção"
+    },
+    {
+      "id": "US09",
+      "module": "CRM",
+      "role": "comercial",
+      "goal": "pedir alteração de limite de crédito",
+      "benefit": "usar condições aprovadas",
+      "criteria": [
+        "Pedido conserva limite anterior, proposto e justificação com apoio financeiro.",
+        "Só gerente decide e o novo valor aparece após aprovação."
+      ],
+      "priority": "P0",
+      "sprint": 3,
+      "requirements": [
+        "REQ09"
+      ],
+      "dependency": "US05 US07",
+      "phase": "Local"
+    },
+    {
+      "id": "US10",
+      "module": "CRM",
+      "role": "comercial",
+      "goal": "preparar cotação com percurso datas e preço",
+      "benefit": "propor um serviço definido",
+      "criteria": [
+        "Cliente, locais, datas e valor em euros são obrigatórios.",
+        "Rascunho permite revisão sem marcar aceitação."
+      ],
+      "priority": "P0",
+      "sprint": 3,
+      "requirements": [
+        "REQ10"
+      ],
+      "dependency": "US07",
+      "phase": "Local"
+    },
+    {
+      "id": "US11",
+      "module": "CRM",
+      "role": "gerente",
+      "goal": "aprovar ou rejeitar uma cotação",
+      "benefit": "autorizar o compromisso comercial",
+      "criteria": [
+        "Só cotação Em aprovação admite decisão.",
+        "Decisão grava motivo e segue a regra de autoaprovação."
+      ],
+      "priority": "P0",
+      "sprint": 3,
+      "requirements": [
+        "REQ10"
+      ],
+      "dependency": "US05 US10",
+      "phase": "Local"
+    },
+    {
+      "id": "US12",
+      "module": "CRM TMS",
+      "role": "operacoes",
+      "goal": "converter cotação aceite em serviço",
+      "benefit": "manter origem comercial",
+      "criteria": [
+        "Aceitação exige cotação aprovada e referência do cliente.",
+        "Uma conversão cria um serviço e repetição não duplica."
+      ],
+      "priority": "P0",
+      "sprint": 3,
+      "requirements": [
+        "REQ11"
+      ],
+      "dependency": "US11",
+      "phase": "Local"
+    },
+    {
+      "id": "US13",
+      "module": "TMS",
+      "role": "operacoes",
+      "goal": "manter ficha completa de serviço",
+      "benefit": "acompanhar a execução",
+      "criteria": [
+        "Cliente, locais, datas, valor e estado são validados.",
+        "Os recursos e a cotação de origem permanecem ligados."
+      ],
+      "priority": "P0",
+      "sprint": 4,
+      "requirements": [
+        "REQ12"
+      ],
+      "dependency": "US12",
+      "phase": "Local"
+    },
+    {
+      "id": "US14",
+      "module": "TMS",
+      "role": "operacoes",
+      "goal": "atribuir veículo e motorista disponíveis",
+      "benefit": "evitar conflitos",
+      "criteria": [
+        "Piloto recusa sobreposição de dias completos no despacho e início; produção valida também no planeamento.",
+        "Veículo com ordem ativa de oficina fica indisponível."
+      ],
+      "priority": "P0",
+      "sprint": 4,
+      "requirements": [
+        "REQ13"
+      ],
+      "dependency": "US13 US25",
+      "phase": "Local e produção"
+    },
+    {
+      "id": "US15",
+      "module": "TMS",
+      "role": "operacoes",
+      "goal": "despachar o serviço pronto",
+      "benefit": "registar autorização operacional",
+      "criteria": [
+        "Sem motorista, matrícula, estado válido ou com presença ativa no parque o despacho é recusado.",
+        "Hora do despacho é gravada uma vez sem iniciar entrega."
+      ],
+      "priority": "P0",
+      "sprint": 4,
+      "requirements": [
+        "REQ14"
+      ],
+      "dependency": "US14",
+      "phase": "Local"
+    },
+    {
+      "id": "US16",
+      "module": "TMS",
+      "role": "motorista",
+      "goal": "iniciar e concluir o serviço atribuído",
+      "benefit": "manter estado coerente",
+      "criteria": [
+        "Só transições permitidas são aceites.",
+        "Conclusão exige prova com destinatário e referência."
+      ],
+      "priority": "P0",
+      "sprint": 4,
+      "requirements": [
+        "REQ15"
+      ],
+      "dependency": "US04 US15",
+      "phase": "Local"
+    },
+    {
+      "id": "US17",
+      "module": "TMS",
+      "role": "operacoes",
+      "goal": "rever a prova de entrega",
+      "benefit": "preparar cobrança com evidência",
+      "criteria": [
+        "Prova fica ligada ao serviço correto.",
+        "Serviço histórico concluído sem prova permite registo e revisão antes da minuta."
+      ],
+      "priority": "P0",
+      "sprint": 5,
+      "requirements": [
+        "REQ15"
+      ],
+      "dependency": "US16",
+      "phase": "Local"
+    },
+    {
+      "id": "US18",
+      "module": "TMS",
+      "role": "motorista",
+      "goal": "registar incidentes com evidência",
+      "benefit": "obter uma instrução acompanhada",
+      "criteria": [
+        "Tipo, momento e descrição são obrigatórios.",
+        "Operações atribui acompanhamento e decisão com histórico."
+      ],
+      "priority": "P1",
+      "sprint": 5,
+      "requirements": [
+        "REQ16"
+      ],
+      "dependency": "US16",
+      "phase": "Produção"
+    },
+    {
+      "id": "US19",
+      "module": "TMS",
+      "role": "gerente",
+      "goal": "decidir um cancelamento pedido",
+      "benefit": "preservar compromissos e histórico",
+      "criteria": [
+        "Operações pede com motivo e gerente decide.",
+        "Ação repetida não altera duas vezes nem apaga relações financeiras."
+      ],
+      "priority": "P0",
+      "sprint": 5,
+      "requirements": [
+        "REQ17"
+      ],
+      "dependency": "US05 US13",
+      "phase": "Local"
+    },
+    {
+      "id": "US20",
+      "module": "TMS",
+      "role": "utilizador",
+      "goal": "pesquisar filtrar e exportar serviços",
+      "benefit": "obter uma lista útil",
+      "criteria": [
+        "Filtros combinados limitam os resultados visíveis.",
+        "CSV preserva euros, acentos e apenas registos autorizados."
+      ],
+      "priority": "P0",
+      "sprint": 5,
+      "requirements": [
+        "REQ18"
+      ],
+      "dependency": "US03 US13",
+      "phase": "Local"
+    },
+    {
+      "id": "US21",
+      "module": "YMS",
+      "role": "parque",
+      "goal": "registar entrada numa posição livre",
+      "benefit": "saber que veículos estão no parque",
+      "criteria": [
+        "Uma presença ativa por veículo e posição exclusiva, ligada ao serviço.",
+        "Entrada grava instante e operador; portão fica em observação no piloto e em campo próprio na produção."
+      ],
+      "priority": "P0",
+      "sprint": 6,
+      "requirements": [
+        "REQ19"
+      ],
+      "dependency": "US03",
+      "phase": "Local e produção"
+    },
+    {
+      "id": "US22",
+      "module": "YMS",
+      "role": "parque",
+      "goal": "mover presença para nova posição",
+      "benefit": "manter localização correta",
+      "criteria": [
+        "Destino ocupado é recusado.",
+        "Movimento conserva origem, destino, ator e momento."
+      ],
+      "priority": "P0",
+      "sprint": 6,
+      "requirements": [
+        "REQ20"
+      ],
+      "dependency": "US21",
+      "phase": "Local"
+    },
+    {
+      "id": "US23",
+      "module": "YMS",
+      "role": "parque",
+      "goal": "registar saída autorizada",
+      "benefit": "libertar a posição corretamente",
+      "criteria": [
+        "Sem presença ativa ou com bloqueio operacional a saída é recusada.",
+        "Saída termina presença e repetição não cria outro evento."
+      ],
+      "priority": "P0",
+      "sprint": 6,
+      "requirements": [
+        "REQ21"
+      ],
+      "dependency": "US21 US25",
+      "phase": "Local"
+    },
+    {
+      "id": "US24",
+      "module": "YMS",
+      "role": "operacoes",
+      "goal": "configurar capacidade e reservas do parque",
+      "benefit": "planear chegada e espaço",
+      "criteria": [
+        "Posições operacionais e capacidade são configuráveis.",
+        "Reserva em conflito produz indicação e impede sobreocupação."
+      ],
+      "priority": "P1",
+      "sprint": 6,
+      "requirements": [
+        "REQ22"
+      ],
+      "dependency": "US21",
+      "phase": "Produção"
+    },
+    {
+      "id": "US25",
+      "module": "Oficina",
+      "role": "oficina",
+      "goal": "abrir ordem ligada ao veículo",
+      "benefit": "tornar visível a indisponibilidade",
+      "criteria": [
+        "Problema e estimativa são validados.",
+        "Ordem ativa bloqueia despacho até rejeição ou libertação."
+      ],
+      "priority": "P0",
+      "sprint": 7,
+      "requirements": [
+        "REQ23"
+      ],
+      "dependency": "US03",
+      "phase": "Local"
+    },
+    {
+      "id": "US26",
+      "module": "Oficina",
+      "role": "gerente",
+      "goal": "aprovar o orçamento da ordem",
+      "benefit": "autorizar os trabalhos",
+      "criteria": [
+        "Oficina submete; gerente aprova ou rejeita.",
+        "Início é recusado antes de aprovação válida."
+      ],
+      "priority": "P0",
+      "sprint": 7,
+      "requirements": [
+        "REQ24"
+      ],
+      "dependency": "US05 US25",
+      "phase": "Local"
+    },
+    {
+      "id": "US27",
+      "module": "Oficina",
+      "role": "oficina",
+      "goal": "registar execução e conclusão",
+      "benefit": "demonstrar o trabalho realizado",
+      "criteria": [
+        "Ordem aprovada permite início e conclusão.",
+        "Conclusão exige custo efetivo, notas do trabalho e responsável rastreável."
+      ],
+      "priority": "P0",
+      "sprint": 7,
+      "requirements": [
+        "REQ24"
+      ],
+      "dependency": "US26",
+      "phase": "Local"
+    },
+    {
+      "id": "US28",
+      "module": "Oficina",
+      "role": "gerente",
+      "goal": "libertar veículo após conclusão",
+      "benefit": "devolver disponibilidade com decisão",
+      "criteria": [
+        "Só ordem Concluída permite libertação pelo gerente.",
+        "Quem concluiu não decide sem exceção explícita válida."
+      ],
+      "priority": "P0",
+      "sprint": 7,
+      "requirements": [
+        "REQ25"
+      ],
+      "dependency": "US05 US27",
+      "phase": "Local"
+    },
+    {
+      "id": "US29",
+      "module": "Oficina",
+      "role": "oficina",
+      "goal": "acompanhar manutenção e peças",
+      "benefit": "preparar revisões e stock",
+      "criteria": [
+        "Plano cria vencimento por data ou quilometragem.",
+        "Consumo de peça altera stock e liga custo ao veículo."
+      ],
+      "priority": "P1",
+      "sprint": 8,
+      "requirements": [
+        "REQ26"
+      ],
+      "dependency": "US25",
+      "phase": "Produção"
+    },
+    {
+      "id": "US30",
+      "module": "Financeiro",
+      "role": "financeiro",
+      "goal": "criar minuta ligada ao serviço concluído",
+      "benefit": "preparar cobrança rastreável",
+      "criteria": [
+        "Sem conclusão ou prova a criação é recusada.",
+        "Uma minuta por serviço e valor igual ao preço válido."
+      ],
+      "priority": "P0",
+      "sprint": 8,
+      "requirements": [
+        "REQ27"
+      ],
+      "dependency": "US17",
+      "phase": "Local"
+    },
+    {
+      "id": "US31",
+      "module": "Financeiro",
+      "role": "gerente",
+      "goal": "aprovar a minuta antes da emissão interna",
+      "benefit": "controlar o valor a cobrar",
+      "criteria": [
+        "Financeiro submete e gerente decide com motivo.",
+        "Emissão interna só aceita aprovada e identifica caráter não fiscal."
+      ],
+      "priority": "P0",
+      "sprint": 8,
+      "requirements": [
+        "REQ28"
+      ],
+      "dependency": "US05 US30",
+      "phase": "Local"
+    },
+    {
+      "id": "US32",
+      "module": "Financeiro",
+      "role": "financeiro",
+      "goal": "registar pagamentos parciais e integrais",
+      "benefit": "calcular saldo correto",
+      "criteria": [
+        "Valor positivo até ao saldo e referência única.",
+        "Parcial mantém Emitida e serviço Parcial; saldo zero determina Paga e serviço Pago."
+      ],
+      "priority": "P0",
+      "sprint": 8,
+      "requirements": [
+        "REQ29"
+      ],
+      "dependency": "US31",
+      "phase": "Local"
+    },
+    {
+      "id": "US33",
+      "module": "Financeiro",
+      "role": "financeiro",
+      "goal": "ver saldos e acompanhar vencidos",
+      "benefit": "organizar cobranças",
+      "criteria": [
+        "Saldo deriva de recebimentos e não de campo livre.",
+        "Vencidos são identificados; extensão conserva contactos e próxima ação."
+      ],
+      "priority": "P0",
+      "sprint": 9,
+      "requirements": [
+        "REQ30"
+      ],
+      "dependency": "US32",
+      "phase": "Local e produção"
+    },
+    {
+      "id": "US34",
+      "module": "Financeiro",
+      "role": "financeiro",
+      "goal": "ligar documento fiscal externo ao serviço",
+      "benefit": "evitar dupla faturação real",
+      "criteria": [
+        "Integração usa referência externa e confirmação de emissão.",
+        "Falha e repetição não produzem emissão fiscal duplicada."
+      ],
+      "priority": "P0",
+      "sprint": 9,
+      "requirements": [
+        "REQ31"
+      ],
+      "dependency": "US31",
+      "phase": "Produção"
+    },
+    {
+      "id": "US35",
+      "module": "Dados",
+      "role": "administrador",
+      "goal": "migrar serviços existentes com cópia",
+      "benefit": "preservar trabalho anterior",
+      "criteria": [
+        "Cópia exata anterior à migração é preservada.",
+        "Serviços permanecem e estado antigo de pagamento exige reconciliação."
+      ],
+      "priority": "P0",
+      "sprint": 9,
+      "requirements": [
+        "REQ32"
+      ],
+      "dependency": "US13",
+      "phase": "Local"
+    },
+    {
+      "id": "US36",
+      "module": "Continuidade",
+      "role": "administrador",
+      "goal": "exportar e restaurar cópia completa",
+      "benefit": "recuperar o sistema",
+      "criteria": [
+        "Exportação completa é restrita e inclui relações e contas.",
+        "Restauro de teste preserva acessos, histórico e saldos sem substituir a única base."
+      ],
+      "priority": "P0",
+      "sprint": 9,
+      "requirements": [
+        "REQ33"
+      ],
+      "dependency": "US35",
+      "phase": "Local e produção"
+    },
+    {
+      "id": "US37",
+      "module": "Qualidade",
+      "role": "gerente",
+      "goal": "validar o ciclo completo e recusas",
+      "benefit": "aceitar uma versão comprovada",
+      "criteria": [
+        "Ciclo completo e cenários negativos deixam evidência.",
+        "Defeito crítico impede decisão de produção."
+      ],
+      "priority": "P0",
+      "sprint": 9,
+      "requirements": [
+        "REQ34"
+      ],
+      "dependency": "US19 US23 US28 US32 US36",
+      "phase": "Local e produção"
+    },
+    {
+      "id": "US38",
+      "module": "Segurança",
+      "role": "administrador",
+      "goal": "usar HTTPS MFA e monitorização",
+      "benefit": "preparar acesso remoto seguro",
+      "criteria": [
+        "Perfis privilegiados usam MFA e transporte HTTPS.",
+        "Falhas, revogação de sessão e tentativas abusivas são testadas."
+      ],
+      "priority": "P0",
+      "sprint": 10,
+      "requirements": [
+        "REQ06"
+      ],
+      "dependency": "US02 US03",
+      "phase": "Produção"
+    },
+    {
+      "id": "US39",
+      "module": "Segurança",
+      "role": "utilizador",
+      "goal": "recuperar acesso e confirmar ações sensíveis",
+      "benefit": "manter a conta protegida",
+      "criteria": [
+        "Recuperação usa verificação, prazo e utilização única.",
+        "Mudança sensível revoga sessões conforme política e é auditada."
+      ],
+      "priority": "P0",
+      "sprint": 10,
+      "requirements": [
+        "REQ06"
+      ],
+      "dependency": "US38",
+      "phase": "Produção"
+    },
+    {
+      "id": "US40",
+      "module": "Dados pessoais",
+      "role": "gerente",
+      "goal": "definir acesso conservação e pedidos",
+      "benefit": "tratar informação de forma controlada",
+      "criteria": [
+        "Inventário identifica finalidade, acesso e prazo proposto.",
+        "Pedido de titular e eliminação controlada têm responsáveis e evidência."
+      ],
+      "priority": "P0",
+      "sprint": 10,
+      "requirements": [
+        "REQ35"
+      ],
+      "dependency": "US03 US06",
+      "phase": "Produção"
+    },
+    {
+      "id": "US41",
+      "module": "Plataforma",
+      "role": "operacoes",
+      "goal": "gravar em simultâneo sem perda",
+      "benefit": "trabalhar com equipa",
+      "criteria": [
+        "Duas alterações concorrentes produzem conflito controlado ou transação válida.",
+        "Unicidade de pagamento e conversão resiste à concorrência."
+      ],
+      "priority": "P0",
+      "sprint": 10,
+      "requirements": [
+        "REQ36"
+      ],
+      "dependency": "US12 US32",
+      "phase": "Produção"
+    },
+    {
+      "id": "US42",
+      "module": "Integrações",
+      "role": "operacoes",
+      "goal": "receber eventos de serviços externos",
+      "benefit": "evitar repetição manual",
+      "criteria": [
+        "Evento tem origem e identificador e não duplica ao repetir.",
+        "Falhas permitem reprocessamento e reconciliação por responsável."
+      ],
+      "priority": "P1",
+      "sprint": 10,
+      "requirements": [
+        "REQ37"
+      ],
+      "dependency": "US41",
+      "phase": "Produção"
+    },
+    {
+      "id": "US43",
+      "module": "Operação",
+      "role": "gerente",
+      "goal": "treinar perfis e aceitar o piloto acompanhado",
+      "benefit": "decidir entrada em produção",
+      "criteria": [
+        "Cada função executa SOP com evidência e resultado.",
+        "Gerente assina decisão ligada a versão, riscos e plano de recuperação."
+      ],
+      "priority": "P0",
+      "sprint": 10,
+      "requirements": [
+        "REQ38"
+      ],
+      "dependency": "US34 US37 US38 US40 US41",
+      "phase": "Produção"
+    },
+    {
+      "id": "US44",
+      "module": "Gestão",
+      "role": "gerente",
+      "goal": "ver indicadores com definição e origem",
+      "benefit": "acompanhar a atividade",
+      "criteria": [
+        "Período e população do indicador são explícitos.",
+        "Valor pode ser conciliado com registos autorizados de origem."
+      ],
+      "priority": "P1",
+      "sprint": 10,
+      "requirements": [
+        "REQ39"
+      ],
+      "dependency": "US13 US21 US27 US32",
+      "phase": "Produção"
+    }
+  ],
+  "sprints": [
+    {
+      "number": 1,
+      "title": "Identidades e acesso",
+      "goal": "Configuração, entrada, perfis e alcance do motorista.",
+      "exit": "Demonstrar recusas na API e no ecrã."
+    },
+    {
+      "number": 2,
+      "title": "Decisões e relação comercial",
+      "goal": "Aprovações, histórico e cliente; desenho de oportunidades.",
+      "exit": "Sergiu revê responsabilidades e a exceção do proprietário."
+    },
+    {
+      "number": 3,
+      "title": "Crédito e cotação aceite",
+      "goal": "Pedido de crédito, cotação, aprovação, aceitação e conversão.",
+      "exit": "Uma cotação aceite gera um único serviço rastreável."
+    },
+    {
+      "number": 4,
+      "title": "Planeamento e execução",
+      "goal": "Recursos, despacho, estados e disponibilidade da oficina.",
+      "exit": "Resolver dependência de US25 com bloqueio mínimo antes de fechar US14."
+    },
+    {
+      "number": 5,
+      "title": "Prova incidentes e cancelamento",
+      "goal": "Prova, acompanhamento, cancelamento, pesquisa e exportação.",
+      "exit": "Sem prova não há conclusão elegível para minuta."
+    },
+    {
+      "number": 6,
+      "title": "Parque",
+      "goal": "Presenças, posições, movimentos, saída e capacidade.",
+      "exit": "Conferir ocupação real e recusar movimentos incompatíveis."
+    },
+    {
+      "number": 7,
+      "title": "Oficina",
+      "goal": "Ordens, aprovação, execução e libertação.",
+      "exit": "Despacho só retoma após tratamento de todos os bloqueios."
+    },
+    {
+      "number": 8,
+      "title": "Documentos e recebimentos",
+      "goal": "Minutas internas, aprovação, emissão interna e reconciliação.",
+      "exit": "Parcial e integral mantêm saldo correto; não há emissão fiscal."
+    },
+    {
+      "number": 9,
+      "title": "Migração recuperação e integração fiscal",
+      "goal": "Saldos, preservação de dados, restauro e desenho da integração.",
+      "exit": "A integração real depende do fornecedor escolhido e do contabilista."
+    },
+    {
+      "number": 10,
+      "title": "Preparação da produção",
+      "goal": "Segurança remota, dados, concorrência, integrações e aceitação.",
+      "exit": "Replanear por capacidade; não assumir que todas as integrações cabem num sprint."
+    }
+  ]
+}

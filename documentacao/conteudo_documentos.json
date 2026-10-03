@@ -1,0 +1,3634 @@
+{
+  "01_Requisitos_e_governacao": [
+    {
+      "title": "Requisitos e governação da plataforma TSS",
+      "items": [
+        [
+          "p",
+          "Este documento define o sistema integrado de clientes, transportes, parque, oficina e recebimentos da TSS. Serve de referência para o desenvolvimento e para Sergiu Sandu validar a forma como cada decisão é registada. A versão local permite ensaiar os fluxos com dados de demonstração; a utilização empresarial em produção exige os trabalhos identificados neste documento."
+        ],
+        [
+          "table",
+          [
+            "Controlo",
+            "Valor"
+          ],
+          [
+            [
+              "Entidade",
+              "TSS Transportes Sergiu Sandu, Unipessoal Lda."
+            ],
+            [
+              "Localidade",
+              "Alenquer Portugal"
+            ],
+            [
+              "Responsável de aprovação",
+              "Sergiu Sandu"
+            ],
+            [
+              "Versão",
+              "1.0"
+            ],
+            [
+              "Data",
+              "30 setembro 2026"
+            ],
+            [
+              "Utilização",
+              "Validação local de fluxos e preparação do produto empresarial"
+            ]
+          ],
+          [
+            140,
+            328
+          ]
+        ],
+        [
+          "h",
+          "Âmbito funcional"
+        ],
+        [
+          "b",
+          [
+            "CRM  gestão de clientes, crédito, cotações e aceitação comercial.",
+            "TMS  planeamento, afetação de recursos, despacho, execução e prova de entrega.",
+            "YMS  entrada, posição, movimentos e saída do parque.",
+            "Oficina  orçamento, aprovação, execução, conclusão e libertação de veículos.",
+            "Financeiro  minutas internas, aprovação, recebimentos e saldos ligados ao serviço."
+          ]
+        ],
+        [
+          "h",
+          "Decisões para o piloto"
+        ],
+        [
+          "p",
+          "A única pessoa identificada é Sergiu Sandu. Os restantes perfis representam funções a atribuir, sem nomes, contactos ou credenciais predefinidos. Todas as decisões comerciais e financeiras sujeitas a aprovação pertencem ao gerente; não são criados escalões monetários de aprovação. O administrador gere o sistema e as identidades."
+        ],
+        [
+          "p",
+          "A regra normal exige que o decisor seja uma pessoa diferente do requerente. Como o ensaio local pode ser operado por Sergiu sozinho, existe a opção explícita de exceção do proprietário. O sistema exige motivo com pelo menos 20 caracteres e grava ator, requerente, data e justificação. Em produção com equipa, deve aplicar-se separação de funções por omissão."
+        ]
+      ]
+    },
+    {
+      "title": "Responsabilidades e acesso",
+      "items": [
+        [
+          "p",
+          "Um perfil determina o que uma pessoa pode fazer. No piloto, cada conta tem um perfil. O gerente possui as funções de negócio necessárias ao ensaio individual. A tabela descreve responsabilidades; as atribuições efetivas devem ser registadas na lista de utilizadores e revistas por Sergiu."
+        ],
+        [
+          "table",
+          [
+            "Perfil",
+            "Titular",
+            "Responsabilidade"
+          ],
+          [
+            [
+              "gerente",
+              "Sergiu Sandu",
+              "Aprova cotações, crédito, documentos internos, cancelamentos, orçamento e libertação de oficina. Coordena a validação e assume as exceções."
+            ],
+            [
+              "administrador",
+              "Por atribuir",
+              "Cria e desativa identidades, atribui perfis, mantém configurações e cópias. Este perfil, por si só, não aprova decisões comerciais."
+            ],
+            [
+              "comercial",
+              "Por atribuir",
+              "Regista clientes, oportunidades e cotações. Documenta a aceitação do cliente e solicita alterações de crédito."
+            ],
+            [
+              "operacoes",
+              "Por atribuir",
+              "Converte a cotação aceite em serviço. Planeia, atribui motorista e veículo, despacha e acompanha a entrega."
+            ],
+            [
+              "motorista",
+              "Por atribuir",
+              "Consulta apenas os serviços que lhe são atribuídos. Regista execução, incidentes e prova de entrega."
+            ],
+            [
+              "parque",
+              "Por atribuir",
+              "Controla entrada, posição, movimentação e saída de veículos no parque."
+            ],
+            [
+              "oficina",
+              "Por atribuir",
+              "Abre ordens de trabalho, estima custos, executa trabalhos aprovados e regista conclusão e evidência técnica."
+            ],
+            [
+              "financeiro",
+              "Por atribuir",
+              "Prepara documentos internos e pedidos de aprovação. Regista recebimentos, reconcilia saldos e acompanha cobranças."
+            ],
+            [
+              "auditor",
+              "Por atribuir",
+              "Consulta evidência e histórico autorizado. Não cria, altera, aprova nem elimina registos operacionais."
+            ]
+          ],
+          [
+            80,
+            85,
+            303
+          ]
+        ],
+        [
+          "h",
+          "Princípios de atribuição"
+        ],
+        [
+          "b",
+          [
+            "Criar contas nominais apenas para pessoas autorizadas. Não partilhar a conta de Sergiu.",
+            "Atribuir o perfil necessário à tarefa aprovada. O perfil administrador não concede aprovação de negócio.",
+            "Associar a conta motorista ao serviço para limitar os registos visíveis.",
+            "Desativar o acesso quando termina a responsabilidade e rever sessões ativas.",
+            "Guardar pedido, aprovação, data e responsável de cada atribuição de perfil."
+          ]
+        ],
+        [
+          "p",
+          "A revisão de acessos deve verificar identidade, funções atuais, alcance e necessidade de exportação. Propõe-se uma revisão mensal no piloto e antes de qualquer aumento da equipa; a cadência definitiva pertence a Sergiu."
+        ]
+      ]
+    },
+    {
+      "title": "Regras de aprovação e exceções",
+      "items": [
+        [
+          "p",
+          "A aprovação confirma uma versão concreta do registo. O piloto recusa alterações com versão desatualizada e bloqueia a edição comercial depois da aprovação. Na produção, acrescentar revisão formal: alterar campos relevantes deve invalidar a aprovação e originar novo pedido, conservando a versão anterior."
+        ],
+        [
+          "table",
+          [
+            "Decisão",
+            "Quem prepara",
+            "Quem decide",
+            "Evidência"
+          ],
+          [
+            [
+              "Cotação",
+              "Comercial",
+              "Gerente",
+              "Preço, datas, locais e motivo da decisão"
+            ],
+            [
+              "Limite de crédito",
+              "Comercial com informação financeira",
+              "Gerente",
+              "Limite atual e proposto, justificação"
+            ],
+            [
+              "Cancelamento de serviço",
+              "Operações",
+              "Gerente",
+              "Motivo e tratamento de custos já incorridos"
+            ],
+            [
+              "Documento interno",
+              "Financeiro",
+              "Gerente",
+              "Serviço concluído, prova e valor"
+            ],
+            [
+              "Orçamento de oficina",
+              "Oficina",
+              "Gerente",
+              "Veículo, problema, trabalhos e estimativa"
+            ],
+            [
+              "Libertação de veículo",
+              "Oficina conclui",
+              "Gerente",
+              "Conclusão técnica, custo e decisão"
+            ]
+          ],
+          [
+            106,
+            97,
+            65,
+            200
+          ]
+        ],
+        [
+          "h",
+          "Sequência de uma decisão"
+        ],
+        [
+          "b",
+          [
+            "O responsável grava o registo e submete o pedido, identificando o motivo.",
+            "O gerente verifica a evidência e aprova ou rejeita com justificação.",
+            "A decisão regista ator, requerente, entidade, versão, data e resultado.",
+            "Após rejeição, o responsável corrige e volta a submeter segundo os estados permitidos.",
+            "Pedidos duplicados ou já decididos não devem executar novamente a operação."
+          ]
+        ],
+        [
+          "h",
+          "Exceção do proprietário no ensaio local"
+        ],
+        [
+          "p",
+          "Sergiu deve selecionar a opção de exceção e explicar por que está a acumular preparação e decisão. Uma indicação genérica como aprovado não cumpre os 20 caracteres mínimos. Exemplo adequado: Estou a validar sozinho o fluxo local desta cotação. A exceção fica visível no histórico e não cria uma segunda pessoa."
+        ],
+        [
+          "p",
+          "Não há dispensa implícita de prova de entrega, saldo de pagamento, bloqueio de oficina ou controlo de estados. Uma exceção de separação de funções não deve remover as restantes validações."
+        ]
+      ]
+    },
+    {
+      "title": "Processo do cliente ao recebimento",
+      "items": [
+        [
+          "p",
+          "O identificador do cliente liga a cotação, o serviço, a prova de entrega, a minuta e os recebimentos. Esta cadeia permite localizar a origem de um valor e verificar a decisão que permitiu avançar."
+        ],
+        [
+          "table",
+          [
+            "Etapa",
+            "Responsável",
+            "Condição para avançar",
+            "Registo resultante"
+          ],
+          [
+            [
+              "1 Registar cliente",
+              "Comercial",
+              "Identificação e contacto verificados",
+              "Ficha de cliente"
+            ],
+            [
+              "2 Rever crédito",
+              "Financeiro e gerente",
+              "Decisão registada quando se pede alteração",
+              "Limite aprovado"
+            ],
+            [
+              "3 Preparar cotação",
+              "Comercial",
+              "Locais, datas e valor completos",
+              "Cotação em aprovação"
+            ],
+            [
+              "4 Aprovar cotação",
+              "Gerente",
+              "Evidência revista e decisão válida",
+              "Cotação aprovada"
+            ],
+            [
+              "5 Registar aceitação",
+              "Comercial",
+              "Referência do cliente",
+              "Cotação aceite"
+            ],
+            [
+              "6 Criar e planear",
+              "Operações",
+              "Recursos válidos e disponíveis",
+              "Serviço agendado"
+            ],
+            [
+              "7 Despachar e executar",
+              "Operações e motorista",
+              "Despacho autorizado e ausência de bloqueio",
+              "Serviço em curso"
+            ],
+            [
+              "8 Confirmar entrega",
+              "Motorista e operações",
+              "Destinatário e referência da prova",
+              "Serviço concluído"
+            ],
+            [
+              "9 Preparar e aprovar minuta",
+              "Financeiro e gerente",
+              "Conclusão e prova existentes",
+              "Minuta aprovada"
+            ],
+            [
+              "10 Registar emissão interna",
+              "Financeiro",
+              "Minuta aprovada",
+              "Documento interno emitido"
+            ],
+            [
+              "11 Reconciliar recebimento",
+              "Financeiro",
+              "Referência única e montante válido",
+              "Saldo parcial ou nulo"
+            ]
+          ],
+          [
+            109,
+            100,
+            153,
+            106
+          ]
+        ],
+        [
+          "h",
+          "Processos de suporte"
+        ],
+        [
+          "p",
+          "O parque controla a presença física e deve refletir os movimentos reais. A oficina torna o veículo indisponível para despacho desde a abertura de uma ordem ativa até à rejeição ou libertação. O processo comercial continua ligado ao serviço mesmo quando existe cancelamento, avaria ou atraso."
+        ],
+        [
+          "p",
+          "Emitida é uma etapa interna do piloto. A minuta não é documento fiscal e não substitui a faturação utilizada pela empresa. Na produção, a confirmação da emissão real virá do sistema de faturação externo e será ligada ao serviço."
+        ]
+      ]
+    },
+    {
+      "title": "Estados e integridade dos registos",
+      "items": [
+        [
+          "table",
+          [
+            "Objeto",
+            "Fluxo principal",
+            "Condições principais"
+          ],
+          [
+            [
+              "Cotação",
+              "Rascunho > Em aprovação > Aprovada > Aceite > Convertida",
+              "Gerente decide; aceitação tem referência; conversão cria um serviço. Rejeitada exige correção."
+            ],
+            [
+              "Serviço",
+              "Agendado > Em curso > Concluído",
+              "Despacho fica datado; recursos válidos; conclusão tem destinatário e referência de prova. Cancelado depende de aprovação."
+            ],
+            [
+              "Oficina",
+              "Rascunho > Em aprovação > Aprovada > Em curso > Concluída > Libertada",
+              "Ordem ativa bloqueia; gerente aprova orçamento e liberta veículo após conclusão."
+            ],
+            [
+              "Documento interno",
+              "Rascunho > Em aprovação > Aprovada > Emitida > Paga",
+              "Uma minuta por serviço elegível; parcial mantém Emitida; saldo nulo determina Paga."
+            ],
+            [
+              "Parque",
+              "Entrada > Presença > Movimento > Saída",
+              "Uma presença ativa por veículo; posição exclusiva não admite sobreposição."
+            ]
+          ],
+          [
+            91,
+            172,
+            205
+          ]
+        ],
+        [
+          "h",
+          "Modelo de dados e relações"
+        ],
+        [
+          "b",
+          [
+            "Cliente possui cotações, serviços e limite de crédito. A identificação é estável mesmo que o nome mude.",
+            "Cotação conserva cliente, percurso, datas, valor e decisões. O serviço conserva a referência da cotação convertida.",
+            "Serviço liga motorista e veículo e possui prova de entrega. Registos antigos sem prova devem ser revistos antes de faturação interna.",
+            "Documento interno liga um serviço e vários recebimentos. O saldo resulta do valor menos a soma dos recebimentos válidos.",
+            "Veículo liga movimentos de parque e ordens de oficina. Um bloqueio ativo deve ser consultado no despacho.",
+            "Utilizador liga perfis e ações do histórico. Desativar uma conta não remove o seu histórico."
+          ]
+        ],
+        [
+          "h",
+          "Valores e datas"
+        ],
+        [
+          "p",
+          "O piloto guarda montantes em cêntimos e apresenta euros com duas casas decimais. As datas de transporte representam dias completos; o controlo de sobreposição é realizado no despacho e início. O calendário usa Europe Lisbon. Na produção, definir janelas horárias e validar sobreposições também durante o planeamento."
+        ]
+      ]
+    },
+    {
+      "title": "Segurança e continuidade",
+      "items": [
+        [
+          "p",
+          "Autenticação confirma a conta; autorização verifica cada ação e o alcance do registo. O servidor deve negar operações sem permissão mesmo que alguém altere a interface ou chame diretamente a API. O alcance do motorista inclui somente serviços atribuídos. Estas regras seguem as orientações OWASP sobre autorização [2]."
+        ],
+        [
+          "h",
+          "Controlos da versão local"
+        ],
+        [
+          "b",
+          [
+            "Configuração inicial sem credenciais partilhadas de demonstração; palavra passe definida por Sergiu.",
+            "Credenciais derivadas com sal e nunca guardadas em texto simples; erros de entrada sem revelar contas.",
+            "Sessão no servidor, saída, expiração e verificação de acesso em operações protegidas.",
+            "Histórico das alterações e decisões; cópias completas tratadas como informação confidencial.",
+            "Aplicação ligada ao computador local; acesso remoto exige trabalho adicional e nova validação."
+          ]
+        ],
+        [
+          "h",
+          "Trabalho necessário para produção"
+        ],
+        [
+          "p",
+          "Antes de acesso remoto, exigir HTTPS e rever cookies, proteção contra pedidos indevidos e limitação de tentativas. Acrescentar MFA aos perfis privilegiados, recuperação segura de conta e revogação de sessões após incidentes. A orientação de autenticação OWASP fundamenta estes requisitos propostos [1]."
+        ],
+        [
+          "p",
+          "Rever os parâmetros da função de derivação de palavras passe na infraestrutura escolhida. OWASP recomenda algoritmos apropriados e parâmetros ajustados ao custo de ataque; a implementação do piloto deve ser medida e revista antes de produção [3]."
+        ],
+        [
+          "h",
+          "Cópias e recuperação"
+        ],
+        [
+          "p",
+          "O administrador prepara uma cópia autorizada da base completa, identifica a data e guarda-a em localização restrita. No piloto, testar a recuperação numa cópia separada. Em produção, propõe-se cópia diária, cópia independente e teste mensal de restauro. Estas frequências são propostas operacionais, sem compromisso de disponibilidade."
+        ],
+        [
+          "p",
+          "Proposta a validar por Sergiu: perda máxima tolerada de dados de um dia e recuperação em quatro horas. Confirmar os objetivos depois de medir o tempo real de cópia e restauro, escolher a infraestrutura e definir o responsável de suporte."
+        ]
+      ]
+    },
+    {
+      "title": "Cobertura da versão local",
+      "items": [
+        [
+          "p",
+          "O catálogo define o objetivo do produto. Esta tabela descreve o alcance efetivo do piloto e os campos ou controlos que ainda exigem desenvolvimento. A validação de Sergiu deve usar ambos para evitar assumir que uma extensão prevista já está disponível."
+        ],
+        [
+          "table",
+          [
+            "Área",
+            "Disponível no piloto",
+            "Extensão necessária"
+          ],
+          [
+            [
+              "Acessos",
+              "Uma conta inicial de Sergiu; um perfil por conta; controlo no servidor.",
+              "MFA, recuperação segura, identidade externa e revisão operacional de acesso."
+            ],
+            [
+              "Cliente",
+              "Nome, NIF, contactos, responsável e limite aprovado informativo.",
+              "Moradas, estado, oportunidades e controlo automático de exposição ao crédito."
+            ],
+            [
+              "Cotação",
+              "Percurso, datas, preço, aprovação, aceitação e conversão única.",
+              "Condições, anexos, propostas formais e envio externo."
+            ],
+            [
+              "Planeamento",
+              "Motorista, conta associada opcional e matrícula; bloqueio no despacho e início.",
+              "Cadastro completo de recursos e janelas horárias; conflitos ao planear."
+            ],
+            [
+              "Parque",
+              "Presença ligada ao serviço, posição livre em texto e movimentos.",
+              "Campo de portão, catálogo de posições, reservas e capacidade."
+            ],
+            [
+              "Oficina",
+              "Matrícula, descrição, estimativa, estados, custo final, notas de conclusão e libertação.",
+              "Prioridade, peças, mão de obra e anexos de verificação técnica."
+            ],
+            [
+              "Financeiro",
+              "Minuta não fiscal, vencimento, aprovação, emissão interna e recebimentos.",
+              "Faturação real, notas de crédito, estornos e reconciliação bancária."
+            ],
+            [
+              "Continuidade",
+              "Base local, cópia de migração e exportação autorizada.",
+              "Restauro operacional repetível, cópias externas automatizadas e base transacional."
+            ]
+          ],
+          [
+            83,
+            193,
+            192
+          ]
+        ],
+        [
+          "h",
+          "Sequência entre parque e transporte"
+        ],
+        [
+          "p",
+          "Operações planeia; parque confirma e regista saída física; operações autoriza o despacho no TMS; motorista inicia o serviço. O sistema recusa despacho ou início enquanto existe presença ativa no parque. A saída do parque também é recusada se existir bloqueio de oficina."
+        ],
+        [
+          "h",
+          "Evidência fora do formulário"
+        ],
+        [
+          "p",
+          "Quando falta um campo, conservar informação em apoio restrito autorizado por Sergiu. Um nome de motorista em texto não concede acesso individual; associar a conta ao serviço. O limite de crédito aprovado é informativo: o piloto não calcula exposição nem bloqueia automaticamente despacho ou emissão por ultrapassagem."
+        ]
+      ]
+    },
+    {
+      "title": "Catálogo de requisitos de acesso e CRM",
+      "items": [
+        [
+          "p",
+          "Local identifica requisito do piloto; Local parcial identifica cobertura incompleta descrita na secção Cobertura da versão local. Produção identifica desenvolvimento posterior. A rastreabilidade liga requisitos às histórias; a aceitação depende dos critérios e evidência de teste."
+        ],
+        [
+          "table",
+          [
+            "ID",
+            "Requisito",
+            "Fase"
+          ],
+          [
+            [
+              "REQ01",
+              "Cada pessoa tem conta própria; a configuração inicial cria apenas a conta de Sergiu.",
+              "Local"
+            ],
+            [
+              "REQ02",
+              "Autenticação verificada no servidor, palavras passe derivadas com sal, saída e expiração de sessão.",
+              "Local"
+            ],
+            [
+              "REQ03",
+              "Validar perfil e alcance de cada operação no servidor; motorista limitado aos serviços atribuídos.",
+              "Local"
+            ],
+            [
+              "REQ04",
+              "Gerente aprova; autoaprovação normal rejeitada; exceção do proprietário exige motivo com 20 caracteres e histórico.",
+              "Local"
+            ],
+            [
+              "REQ05",
+              "Guardar ator, ação, entidade, instante e motivo das ações e decisões; exportação autorizada.",
+              "Local"
+            ],
+            [
+              "REQ06",
+              "Implementar HTTPS, MFA para perfis privilegiados, recuperação segura, monitorização e gestão de segredos.",
+              "Produção"
+            ],
+            [
+              "REQ07",
+              "Ficha única com identificação, contactos, moradas, estado e observações; rejeitar duplicações evidentes.",
+              "Local parcial"
+            ],
+            [
+              "REQ08",
+              "Oportunidades com responsável, etapa, tarefa seguinte e histórico de contactos ligados ao cliente.",
+              "Produção"
+            ],
+            [
+              "REQ09",
+              "Alterar limite por pedido e decisão do gerente; valores e motivos registados sem limites de aprovação inventados.",
+              "Local"
+            ],
+            [
+              "REQ10",
+              "Cliente, recolha, entrega, datas e preço em euros; enviar a aprovação antes da aceitação e conversão.",
+              "Local"
+            ],
+            [
+              "REQ11",
+              "Aceitação com referência do cliente; criar um serviço a partir da cotação aceite sem duplicar a conversão.",
+              "Local"
+            ]
+          ],
+          [
+            51,
+            329,
+            88
+          ]
+        ]
+      ]
+    },
+    {
+      "title": "Catálogo de requisitos de transporte e parque",
+      "items": [
+        [
+          "table",
+          [
+            "ID",
+            "Requisito",
+            "Fase"
+          ],
+          [
+            [
+              "REQ12",
+              "Referência única e ligação ao cliente; datas, recolha, entrega, motorista, veículo, valor, estado e pagamento.",
+              "Local"
+            ],
+            [
+              "REQ13",
+              "Operações atribui recursos válidos; verificar conflitos de período e indisponibilidade da oficina.",
+              "Local parcial"
+            ],
+            [
+              "REQ14",
+              "Despachar apenas serviço agendado com recursos atribuídos e veículo disponível; manter hora do despacho.",
+              "Local"
+            ],
+            [
+              "REQ15",
+              "Transições controladas de Agendado para Em curso e Concluído; registar prova de entrega antes de concluir.",
+              "Local"
+            ],
+            [
+              "REQ16",
+              "Registar avaria, atraso, dano e falha de entrega com responsável, evidência e plano de resolução.",
+              "Produção"
+            ],
+            [
+              "REQ17",
+              "Pedir cancelamento com motivo; somente decisão do gerente altera o estado final.",
+              "Local"
+            ],
+            [
+              "REQ18",
+              "Pesquisar e combinar filtros; exportar apenas os registos autorizados e correspondentes aos filtros.",
+              "Local"
+            ],
+            [
+              "REQ19",
+              "Registar entrada, veículo, portão, instante e posição livre; uma presença ativa por veículo.",
+              "Local parcial"
+            ],
+            [
+              "REQ20",
+              "Transferir presença entre posições livres; guardar origem, destino, ator e instante.",
+              "Local"
+            ],
+            [
+              "REQ21",
+              "Registar saída uma vez; não admitir saída operacional de veículo bloqueado pela oficina.",
+              "Local"
+            ],
+            [
+              "REQ22",
+              "Configurar posições, reservas e capacidade; impedir ocupações simultâneas em posição exclusiva.",
+              "Produção"
+            ]
+          ],
+          [
+            51,
+            339,
+            78
+          ]
+        ],
+        [
+          "h",
+          "Validação do transporte"
+        ],
+        [
+          "p",
+          "Verificar sempre a pessoa responsável pelo serviço, o estado atual e as ligações a veículo e cliente. O campo pago não pode ser alterado livremente: deve ser calculado a partir dos recebimentos do documento interno. Os registos migrados preservam o estado antigo como informação a reconciliar."
+        ]
+      ]
+    },
+    {
+      "title": "Catálogo de requisitos de oficina e financeiro",
+      "items": [
+        [
+          "table",
+          [
+            "ID",
+            "Requisito",
+            "Fase"
+          ],
+          [
+            [
+              "REQ23",
+              "Ordem ligada ao veículo com problema, estimativa, prioridade e estado; bloquear despacho enquanto ativa.",
+              "Local parcial"
+            ],
+            [
+              "REQ24",
+              "Submeter orçamento ao gerente; executar apenas ordem aprovada e registar conclusão e custo efetivo.",
+              "Local"
+            ],
+            [
+              "REQ25",
+              "Gerente liberta veículo após conclusão técnica e decisão documentada; separar de quem concluiu salvo exceção do proprietário.",
+              "Local"
+            ],
+            [
+              "REQ26",
+              "Planos por tempo ou quilometragem, stock, consumos e alertas com histórico por veículo.",
+              "Produção"
+            ],
+            [
+              "REQ27",
+              "Criar uma minuta por serviço concluído com prova de entrega; valor ligado ao preço do serviço.",
+              "Local"
+            ],
+            [
+              "REQ28",
+              "Submeter e aprovar antes de marcar emissão interna; correções preservam rastreabilidade.",
+              "Local"
+            ],
+            [
+              "REQ29",
+              "Valor positivo, referência única e montante não superior ao saldo; suportar recebimento parcial e integral.",
+              "Local"
+            ],
+            [
+              "REQ30",
+              "Mostrar saldo e vencimento; lista de valores vencidos e seguimento de contactos com o cliente.",
+              "Local e produção"
+            ],
+            [
+              "REQ31",
+              "Ligar a faturação real e contabilidade através de integração validada com o contabilista; piloto não emite documento fiscal.",
+              "Produção"
+            ]
+          ],
+          [
+            51,
+            339,
+            78
+          ]
+        ],
+        [
+          "h",
+          "Validação financeira"
+        ],
+        [
+          "p",
+          "A emissão e o recebimento são eventos diferentes. Um documento pode estar emitido e não estar pago. O parcial mantém Emitida no documento e mostra Parcial no serviço; saldo nulo determina Paga e Pago. A soma não pode ultrapassar o valor devido. A referência impede a contabilização repetida da mesma evidência."
+        ]
+      ]
+    },
+    {
+      "title": "Catálogo de requisitos de entrega e produção",
+      "items": [
+        [
+          "table",
+          [
+            "ID",
+            "Requisito",
+            "Fase"
+          ],
+          [
+            [
+              "REQ32",
+              "Preservar serviços existentes e cópia anterior à migração; marcar informação histórica que exige revisão.",
+              "Local"
+            ],
+            [
+              "REQ33",
+              "Cópia exportável restrita e procedimento de restauro ensaiado, incluindo contas, histórico e relações.",
+              "Local e produção"
+            ],
+            [
+              "REQ34",
+              "Teste do ciclo completo, negativas por perfil, dupla decisão, duplicação de pagamento e conflito de recursos.",
+              "Local e produção"
+            ],
+            [
+              "REQ35",
+              "Definir finalidade, acesso, conservação, pedidos de titulares e eliminação controlada antes de dados reais em escala.",
+              "Produção"
+            ],
+            [
+              "REQ36",
+              "Migrar para base transacional, controlo de versão e unicidade; nenhuma perda sob alterações simultâneas.",
+              "Produção"
+            ],
+            [
+              "REQ37",
+              "Conectores de telemática, documentos, correio e banca com reprocessamento seguro e reconciliação.",
+              "Produção"
+            ],
+            [
+              "REQ38",
+              "Treinar cada perfil, validar procedimentos e executar piloto acompanhado antes de decisão de entrada em produção.",
+              "Produção"
+            ],
+            [
+              "REQ39",
+              "Painéis por período para pontualidade, saldo, ocupação e custo de oficina; definições e fonte acessíveis.",
+              "Produção"
+            ]
+          ],
+          [
+            51,
+            339,
+            78
+          ]
+        ],
+        [
+          "h",
+          "Critérios da decisão de produção"
+        ],
+        [
+          "b",
+          [
+            "Sergiu valida o processo completo e as responsabilidades; cada perfil executa o respetivo procedimento.",
+            "Os testes de autorização e de integridade são aprovados e não existem defeitos críticos conhecidos.",
+            "Restauro demonstrado e monitorização operacional atribuída.",
+            "Integração de faturação e contabilidade validada com o contabilista; âmbito de dados pessoais e conservação revisto.",
+            "Migração e eventual regresso ao sistema anterior ensaiados com cópia preservada."
+          ]
+        ],
+        [
+          "p",
+          "A decisão de produção deve registar o responsável, a versão, as evidências e os riscos aceites. A existência de formulários ou autenticação local, por si só, não prova segurança para acesso pela Internet."
+        ]
+      ]
+    },
+    {
+      "title": "Aceitação indicadores e referências",
+      "items": [
+        [
+          "h",
+          "Cenários mínimos de aceitação"
+        ],
+        [
+          "b",
+          [
+            "Cliente > cotação > aprovação > aceitação > serviço > despacho > entrega > minuta > aprovação > recebimento parcial > recebimento integral.",
+            "Motorista tenta consultar serviço alheio; comercial tenta aprovar; administrador tenta decidir orçamento. Todas as ações indevidas são recusadas.",
+            "O requerente tenta aprovar o próprio registo; a regra normal recusa e a exceção explícita do proprietário exige motivo válido.",
+            "Duas atribuições com recurso indisponível, despacho de veículo em oficina, documento sem prova e recebimento superior ao saldo são recusados.",
+            "Repetição de conversão, saída e referência de pagamento não duplica os eventos.",
+            "Cópia e restauro preservam contas, relações e histórico; dados migrados permanecem disponíveis."
+          ]
+        ],
+        [
+          "h",
+          "Indicadores propostos"
+        ],
+        [
+          "table",
+          [
+            "Indicador",
+            "Definição"
+          ],
+          [
+            [
+              "Pontualidade",
+              "Entregas no prazo divididas pelas entregas com data prevista e efetiva."
+            ],
+            [
+              "Saldo por cliente",
+              "Soma dos valores internos emitidos menos recebimentos reconciliados."
+            ],
+            [
+              "Ocupação do parque",
+              "Posições ocupadas divididas pelas posições operacionais configuradas."
+            ],
+            [
+              "Custo de oficina",
+              "Soma dos custos efetivos registados por veículo e período."
+            ],
+            [
+              "Tempo de aprovação",
+              "Diferença entre submissão e decisão; apresentar os pendentes à parte."
+            ]
+          ],
+          [
+            140,
+            328
+          ]
+        ],
+        [
+          "h",
+          "Referências técnicas"
+        ],
+        [
+          "p",
+          "As referências sustentam os requisitos de segurança propostos. Não constituem certificação do produto. Consultadas em 30 setembro 2026."
+        ],
+        [
+          "p",
+          "[1] OWASP Authentication Cheat Sheet  https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+        ],
+        [
+          "p",
+          "[2] OWASP Authorization Cheat Sheet  https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+        ],
+        [
+          "p",
+          "[3] OWASP Password Storage Cheat Sheet  https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+        ]
+      ]
+    }
+  ],
+  "02_Procedimentos_operacionais": [
+    {
+      "title": "Procedimentos operacionais da plataforma TSS",
+      "items": [
+        [
+          "p",
+          "Este manual orienta o trabalho diário desde o registo do cliente até ao recebimento, incluindo parque, oficina, acessos e recuperação. Cada procedimento identifica quem executa, o que tem de existir, como avançar, quem aprova e que evidência conservar."
+        ],
+        [
+          "table",
+          [
+            "Controlo",
+            "Valor"
+          ],
+          [
+            [
+              "Empresa",
+              "TSS Transportes Sergiu Sandu, Unipessoal Lda."
+            ],
+            [
+              "Responsável",
+              "Sergiu Sandu"
+            ],
+            [
+              "Versão e data",
+              "1.0   30 setembro 2026"
+            ],
+            [
+              "Âmbito",
+              "Piloto local e preparação dos procedimentos de produção"
+            ]
+          ],
+          [
+            140,
+            328
+          ]
+        ],
+        [
+          "h",
+          "Como utilizar"
+        ],
+        [
+          "p",
+          "Executar o procedimento correspondente à tarefa. O identificador SOP liga os passos aos requisitos e às histórias. Quando a interface não suporta ainda uma extensão de produção, guardar a evidência na localização restrita aprovada por Sergiu e manter a referência no registo."
+        ],
+        [
+          "h",
+          "Regras comuns"
+        ],
+        [
+          "b",
+          [
+            "Confirmar o cliente, veículo ou serviço antes de gravar qualquer ação.",
+            "Usar conta própria e perfil autorizado; não partilhar palavras passe.",
+            "Guardar referências que permitam localizar documentos e decisões.",
+            "Gerente aprova todas as decisões indicadas; não existem escalões monetários neste piloto.",
+            "A autoaprovação normal é recusada. Sergiu sozinho pode usar a exceção explícita do proprietário, com motivo de pelo menos 20 caracteres.",
+            "Uma minuta interna não é documento fiscal. A faturação real continua no sistema validado pela empresa."
+          ]
+        ],
+        [
+          "h",
+          "Responsabilidades no ensaio"
+        ],
+        [
+          "p",
+          "Sergiu Sandu é o gerente e o único titular nominal confirmado. Comercial, operações, motorista, parque, oficina, financeiro, auditor e administrador são funções a atribuir. Sergiu pode testar as funções durante a validação; as atribuições futuras devem constar da lista de utilizadores."
+        ],
+        [
+          "p",
+          "Antes de utilizar dados reais, confirmar cópia de segurança, acesso físico ao computador e localização de provas e documentos. Definir o responsável de cada turno e a forma de comunicar incidentes sem expor informação de clientes."
+        ]
+      ]
+    },
+    {
+      "title": "SOP01 Registar cliente e rever crédito",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP01   Responsável Comercial com financeiro; gerente decide crédito."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Surge um novo pedido de transporte, um novo cliente ou uma alteração às condições de pagamento."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Existe identificação do cliente e contacto de referência. A pessoa tem acesso autorizado ao CRM."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Pesquisar nome e identificação antes de criar a ficha. Confirmar se o cliente já existe."
+        ],
+        [
+          "p",
+          "2. Registar nome, identificação e contactos. O piloto tem contacto, email e telefone; guardar moradas e informação adicional no registo de apoio restrito."
+        ],
+        [
+          "p",
+          "3. Registar referência do pedido e condições de pagamento pretendidas no apoio. Financeiro verifica saldo e condições com comercial."
+        ],
+        [
+          "p",
+          "4. Comercial prepara pedido de alteração de limite, com valor atual, proposto e justificação, e submete ao gerente. Financeiro fornece a informação de suporte."
+        ],
+        [
+          "p",
+          "5. Gerente revê a informação, decide e regista o motivo. Comunicar internamente a decisão ao comercial."
+        ],
+        [
+          "p",
+          "6. Só usar o limite aprovado. Se houver dúvidas sobre identificação ou capacidade de pagamento, manter o pedido em análise."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "A alteração de crédito exige aprovação de Sergiu. A exceção do proprietário aplica-se apenas à separação de pessoas e fica justificada."
+        ],
+        [
+          "p",
+          "Conservar ficha, referência de contacto, pedido de crédito, decisão e histórico de alterações."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Duplicação ou divergência de identificação é escalada ao gerente. Não apagar fichas ligadas a serviços. O limite é informativo: não existe bloqueio automático de despacho ou emissão por exposição. Limite zero não impõe pagamento antecipado; acordar condições concretas."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ07 REQ09   US07 US09"
+        ],
+        [
+          "p",
+          "Extensão de produção  Definir verificações de cliente e política de crédito, exposição comprometida e bloqueio automático quando houver condições aprovadas. O piloto não substitui análise de risco."
+        ]
+      ]
+    },
+    {
+      "title": "SOP02 Preparar aprovar e aceitar cotação",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP02   Responsável Comercial; gerente aprova."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "O cliente pede preço e disponibilidade para um transporte."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Cliente identificado. Conhecem-se locais de recolha e entrega, datas e necessidades do serviço."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Criar cotação em Rascunho ligada ao cliente. Registar recolha, entrega, datas e preço em euros."
+        ],
+        [
+          "p",
+          "2. Verificar percurso, disponibilidade preliminar, condições e consistência do valor. Guardar pressupostos no registo de apoio restrito, pois o piloto não tem campo de condições."
+        ],
+        [
+          "p",
+          "3. Submeter a cotação em Em aprovação. Aguardar decisão; não marcar aceitação de cotação ainda não aprovada."
+        ],
+        [
+          "p",
+          "4. Gerente revê informação, aprova ou rejeita com motivo. Corrigir o registo rejeitado e voltar a submeter quando permitido."
+        ],
+        [
+          "p",
+          "5. Registar a aceitação do cliente somente após aprovação, incluindo referência verificável de mensagem, proposta assinada ou outro acordo."
+        ],
+        [
+          "p",
+          "6. Passar a cotação aceite a operações para conversão. Confirmar que a mesma cotação não criou já um serviço."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Sergiu aprova a libertação comercial. No ensaio individual, seleciona a exceção do proprietário e explica a acumulação de funções."
+        ],
+        [
+          "p",
+          "Conservar versão da cotação, decisão, referência da aceitação e ligação ao serviço criado."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Mudança de preço ou de percurso após aprovação exige revisão e nova decisão antes do compromisso. Se o cliente não aceitar, conservar a cotação e o motivo. O envio externo não é automático no piloto."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ10 REQ11   US10 US11 US12"
+        ]
+      ]
+    },
+    {
+      "title": "SOP03 Planear atribuir e despachar serviço",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP03   Responsável Operações."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Uma cotação foi aceite ou operações recebeu um serviço autorizado para planear."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Cliente e datas válidos, motorista identificado, matrícula conhecida e acesso autorizado ao TMS."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Converter uma vez a cotação aceite em serviço Agendado. Confirmar referência, cliente, percurso e preço."
+        ],
+        [
+          "p",
+          "2. Atribuir motorista e matrícula adequados. Associar conta motorista para acesso individual. Rever conflitos; o piloto valida dias completos no despacho e início."
+        ],
+        [
+          "p",
+          "3. Confirmar disponibilidade, locais e instruções. Verificar documentação e condições de condução pelos procedimentos da empresa; estes controlos humanos não são automatizados."
+        ],
+        [
+          "p",
+          "4. Se existe presença no parque, solicitar conferência e saída pelo SOP05 antes do despacho. Confirmar que não há bloqueio de oficina."
+        ],
+        [
+          "p",
+          "5. Autorizar despacho no TMS. Confirmar hora gravada e recursos. O sistema recusa presença ativa no parque ou recurso em conflito."
+        ],
+        [
+          "p",
+          "6. O motorista inicia a execução e operações acompanha o estado. Depois do despacho, o planeamento fica bloqueado no piloto."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "A afetação de recursos pertence a operações. Alterações comerciais exigem revisão do gerente; o despacho não substitui essa decisão."
+        ],
+        [
+          "p",
+          "Conservar serviço, afetação, despacho, instruções e verificação operacional aplicável."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Conflito de recurso ou bloqueio de oficina impede o despacho. Reatribuir recurso disponível ou escalar ao gerente; nunca apagar a ordem de oficina para desbloquear o veículo."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ12 REQ13 REQ14   US13 US14 US15"
+        ],
+        [
+          "p",
+          "Extensão de produção  Integrar disponibilidade, qualificações, documentação e telemática. O piloto valida conflitos e estados, não comprova todas as condições legais de operação."
+        ]
+      ]
+    },
+    {
+      "title": "SOP04 Controlar entrada e movimento no parque",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP04   Responsável Parque."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Um veículo chega ao parque ou tem de mudar de posição."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Veículo identificado, portão e posição conhecidos; existe acesso ao YMS."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Confirmar matrícula, serviço associado e presença física. Consultar se já existe presença ativa para evitar entrada duplicada."
+        ],
+        [
+          "p",
+          "2. Registar entrada com veículo, serviço e posição disponível. O instante é gravado. Referir o portão na observação, pois ainda não existe campo próprio."
+        ],
+        [
+          "p",
+          "3. Conferir a posição no terreno e registar observações sobre condição ou necessidade de apoio."
+        ],
+        [
+          "p",
+          "4. Para movimentar, confirmar origem e destino livre. Registar movimento antes de considerar a mudança concluída no sistema."
+        ],
+        [
+          "p",
+          "5. Confirmar que a nova posição corresponde à localização real. Corrigir divergência através de ação rastreável."
+        ],
+        [
+          "p",
+          "6. Comunicar bloqueios de circulação ou avarias a operações e oficina; quando apropriado, abrir ordem de trabalho."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "O perfil parque executa movimentos normais. Uma exceção de segurança ou indisponibilidade deve ser decidida pelo responsável operacional e escalada a Sergiu quando altera o serviço."
+        ],
+        [
+          "p",
+          "Conservar entrada, portão, posições, instantes, ator e observações do movimento."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Matrícula desconhecida, posição ocupada ou presença duplicada exige conferência física antes de registar. Não criar uma segunda matrícula para contornar a validação. Em falha de sistema, usar registo de contingência e reconciliar depois."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ19 REQ20   US21 US22"
+        ],
+        [
+          "p",
+          "Extensão de produção  Configurar capacidade, reservas, mapa de posições e ligação a portarias e sensores. Não é autorizada movimentação física pela simples existência de um registo."
+        ]
+      ]
+    },
+    {
+      "title": "SOP05 Controlar saída do parque",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP05   Responsável Parque com operações."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Operações solicita saída ou o veículo apresenta-se no portão."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Existe presença ativa e veículo identificado; existe destino ou serviço associado à saída."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Confirmar matrícula, presença ativa, serviço associado, motorista e motivo da saída."
+        ],
+        [
+          "p",
+          "2. Verificar o serviço previsto e consultar bloqueios de oficina. Um veículo bloqueado não pode ter saída operacional."
+        ],
+        [
+          "p",
+          "3. Confirmar com operações a instrução de saída. A autorização de despacho no TMS ocorre depois do registo de saída do parque."
+        ],
+        [
+          "p",
+          "4. Registar saída com instante e observação de referência. A posição deve ficar disponível."
+        ],
+        [
+          "p",
+          "5. Conferir que o evento foi gravado uma vez e que deixou de existir presença ativa."
+        ],
+        [
+          "p",
+          "6. Informar operações para autorizar o despacho no TMS. Conservar referência de qualquer divergência."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Parque regista a saída normal autorizada. Só Sergiu pode libertar um veículo após conclusão técnica da oficina. Uma saída para assistência externa necessita de decisão e procedimento específicos, fora do fluxo normal do piloto."
+        ],
+        [
+          "p",
+          "Conservar evento de saída, portão ou referência, serviço relacionado e identidade do operador."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Sem presença ativa, não inventar uma entrada retroativa sem verificação. Conferir movimentos reais e escalar divergências. Um bloqueio técnico deve ser resolvido pela oficina e pelo gerente."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ21   US23"
+        ]
+      ]
+    },
+    {
+      "title": "SOP06 Registar entrega e tratar incidente",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP06   Responsável Motorista do serviço; operações acompanha."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "A recolha ou entrega terminou, ou surgiu avaria, atraso, dano ou impossibilidade de entrega."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Serviço atribuído ao motorista e em estado compatível com a execução."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Consultar o serviço atribuído e confirmar cliente, destino e referência."
+        ],
+        [
+          "p",
+          "2. Se houver incidente, contactar operações pelo canal aprovado e registar momento, localização, descrição e evidência disponível."
+        ],
+        [
+          "p",
+          "3. Na entrega, confirmar destinatário e documento ou referência da prova. Registar esses dados de forma legível."
+        ],
+        [
+          "p",
+          "4. Registar a conclusão somente quando existe prova de entrega. Operações confere a coerência com o serviço."
+        ],
+        [
+          "p",
+          "5. Guardar a prova na localização autorizada e a referência no registo; não usar armazenamento público."
+        ],
+        [
+          "p",
+          "6. Quando a entrega falha, manter o serviço em acompanhamento, acordar nova instrução e conservar o histórico."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "A conclusão operacional depende de prova. Alterações de preço, novo compromisso ou cancelamento são decididos pelo gerente nos fluxos apropriados."
+        ],
+        [
+          "p",
+          "Conservar destinatário, referência da prova, serviço, momento e qualquer decisão sobre incidente."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Não concluir para ultrapassar um bloqueio de faturação. Se um serviço importado já estiver concluído sem prova, adicionar e rever a prova antes da minuta. Dano, emergência ou risco pessoal segue primeiro os procedimentos de segurança da empresa."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ15 REQ16   US16 US17 US18"
+        ],
+        [
+          "p",
+          "Extensão de produção  Adicionar anexos protegidos, registo estruturado de incidentes, confirmação de receção e aplicação móvel quando o âmbito estiver aprovado."
+        ]
+      ]
+    },
+    {
+      "title": "SOP07 Pedir e decidir cancelamento",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP07   Responsável Operações pede; gerente decide."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "O cliente retira o pedido ou o serviço deixa de ser executável."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Serviço identificado e motivo conhecido. Custos ou compromissos existentes foram conferidos."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Consultar estado, recursos, cotação e documentos ligados ao serviço."
+        ],
+        [
+          "p",
+          "2. Registar pedido de cancelamento com motivo e referência da instrução recebida."
+        ],
+        [
+          "p",
+          "3. Indicar o tratamento proposto de custos, comunicação ao cliente e recursos afetados em observações."
+        ],
+        [
+          "p",
+          "4. Gerente verifica e aprova ou rejeita o pedido com motivo."
+        ],
+        [
+          "p",
+          "5. Após aprovação, confirmar estado Cancelado e disponibilidade dos recursos; a presença de parque e a ordem de oficina continuam a exigir tratamento próprio."
+        ],
+        [
+          "p",
+          "6. Financeiro verifica se existem valores internos ou recebimentos a corrigir por procedimento controlado."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Sergiu decide o cancelamento. Se for também requerente no ensaio, usa a exceção explícita do proprietário com justificação válida."
+        ],
+        [
+          "p",
+          "Conservar pedido, decisão, comunicação de referência e ligação aos documentos afetados."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Um serviço com documento emitido ou recebimento não deve ser apagado. Escalar a correção ao gerente e ao financeiro; notas de crédito e devoluções fiscais pertencem ao sistema de faturação externo."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ17   US19"
+        ]
+      ]
+    },
+    {
+      "title": "SOP08 Abrir aprovar e executar ordem de oficina",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP08   Responsável Oficina; gerente aprova o orçamento."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Existe avaria, revisão ou reparação a realizar num veículo."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Veículo identificado, descrição do problema e estimativa disponíveis."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Abrir ordem em Rascunho com matrícula, problema e estimativa. Indicar prioridade na descrição, pois não existe campo próprio. Conferir bloqueio operacional."
+        ],
+        [
+          "p",
+          "2. Informar operações para rever serviços atribuídos. O piloto exige que o veículo não tenha serviço Em curso para abrir intervenção."
+        ],
+        [
+          "p",
+          "3. Submeter orçamento a aprovação com trabalhos previstos na descrição e motivo de suporte."
+        ],
+        [
+          "p",
+          "4. Sergiu aprova ou rejeita. Oficina só inicia trabalhos na ordem aprovada."
+        ],
+        [
+          "p",
+          "5. Registar custo efetivo e notas de conclusão com resumo do trabalho. Conservar verificação técnica em apoio restrito e respetiva referência, pois não existem anexos próprios."
+        ],
+        [
+          "p",
+          "6. Marcar Concluída e solicitar libertação ao gerente; não considerar o veículo disponível apenas porque terminou o trabalho."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Sergiu aprova orçamento e posterior libertação. Despesas fora do orçamento aprovado devem ser submetidas a nova decisão antes do compromisso, segundo procedimento da empresa."
+        ],
+        [
+          "p",
+          "Conservar diagnóstico, estimativa, aprovação, trabalhos, custo efetivo e verificação técnica."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Risco de segurança impede circulação. Divergência de custos ou trabalhos exige nova decisão; o piloto não substitui inspeção técnica nem controlo de qualificações. Uma ordem rejeitada conserva o histórico e o problema deve ter encaminhamento."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ23 REQ24   US25 US26 US27"
+        ],
+        [
+          "p",
+          "Extensão de produção  Implementar peças, mão de obra, fornecedores e revisão formal do orçamento. O custo final não prova por si só a aprovação de uma alteração."
+        ]
+      ]
+    },
+    {
+      "title": "SOP09 Rever e libertar veículo da oficina",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP09   Responsável Gerente; oficina fornece evidência."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "A oficina concluiu o trabalho e pede devolução do veículo às operações."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Ordem Concluída com custo efetivo e descrição do trabalho; verificação técnica disponível."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Consultar ordem, diagnóstico, aprovação inicial e conclusão técnica."
+        ],
+        [
+          "p",
+          "2. Confirmar que o trabalho necessário foi realizado e que não existem bloqueios técnicos pendentes."
+        ],
+        [
+          "p",
+          "3. Conferir custo efetivo e alterações. Se excede a estimativa, a libertação exige motivo com pelo menos 20 caracteres para aprovar o custo final."
+        ],
+        [
+          "p",
+          "4. Sergiu regista a decisão de libertação com motivo. Normalmente deve ser pessoa diferente de quem concluiu."
+        ],
+        [
+          "p",
+          "5. Confirmar estado Libertada e disponibilidade operacional do veículo. Rever outras ordens ativas antes de despachar."
+        ],
+        [
+          "p",
+          "6. Informar operações e parque; atualizar planeamento e guardar a evidência da inspeção."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Só gerente liberta. No ensaio individual, a exceção do proprietário identifica claramente que Sergiu acumulou conclusão e decisão e grava a justificação."
+        ],
+        [
+          "p",
+          "Conservar identidade de quem concluiu, decisão de libertação, motivo, instante e referência técnica."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Sem evidência ou com dúvida técnica, manter bloqueio e solicitar verificação competente. A aprovação no software não constitui certificação de segurança do veículo."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ25   US28"
+        ]
+      ]
+    },
+    {
+      "title": "SOP10 Preparar e aprovar documento interno",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP10   Responsável Financeiro; gerente aprova."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "O transporte está concluído e existe prova de entrega para preparar cobrança."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Serviço Concluído, cliente correto, prova com destinatário e referência, preço conferido."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Consultar o serviço e confirmar que não existe já documento interno ligado."
+        ],
+        [
+          "p",
+          "2. Criar a minuta com valor do serviço, referência e data de vencimento acordada. Conferir prova e dados do cliente."
+        ],
+        [
+          "p",
+          "3. Submeter a minuta em Em aprovação; não registar recebimento antes da etapa permitida."
+        ],
+        [
+          "p",
+          "4. Sergiu revê e aprova ou rejeita com justificação. Corrigir divergências mantendo histórico."
+        ],
+        [
+          "p",
+          "5. Após aprovação, financeiro marca emissão interna. Confirmar que o ecrã identifica o documento como interno e não fiscal."
+        ],
+        [
+          "p",
+          "6. Para operação real, emitir através do sistema de faturação da empresa e manter a referência externa quando a integração estiver disponível."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Sergiu aprova a minuta. A exceção do proprietário exige motivo quando o próprio preparou o registo no ensaio."
+        ],
+        [
+          "p",
+          "Conservar serviço, cotação de origem, prova, minuta, decisão e referência da emissão real quando aplicável."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Preço incorreto ou falta de prova exige corrigir a origem e repetir a revisão. Não emitir documento fiscal a partir deste piloto. Faturação, impostos, notas de crédito e requisitos portugueses exigem sistema e validação próprios."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ27 REQ28 REQ31   US30 US31 US34"
+        ]
+      ]
+    },
+    {
+      "title": "SOP11 Registar recebimento e acompanhar saldo",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP11   Responsável Financeiro."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Existe evidência de recebimento ou um valor vencido a acompanhar."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Documento interno Emitida, valor e saldo conferidos; existe referência verificável do pagamento."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Localizar cliente e documento. Comparar evidência, montante, data e referência antes de registar."
+        ],
+        [
+          "p",
+          "2. Introduzir montante positivo não superior ao saldo e referência que ainda não esteja usada."
+        ],
+        [
+          "p",
+          "3. Gravar recebimento e confirmar saldo atualizado. Um recebimento parcial mantém o documento Emitida; saldo nulo muda para Paga."
+        ],
+        [
+          "p",
+          "4. Reconciliar com a evidência bancária ou caixa autorizada. Registo no piloto não movimenta dinheiro nem confirma automaticamente o extrato."
+        ],
+        [
+          "p",
+          "5. Rever documentos vencidos com saldo e registar referência do contacto de cobrança na localização aprovada."
+        ],
+        [
+          "p",
+          "6. Escalar discrepâncias ou pedidos de devolução ao gerente e conservar a decisão antes da correção financeira."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Financeiro reconcilia recebimentos. Alterações de crédito ou exceções comerciais pertencem ao gerente. Devoluções e ajustamentos precisam de procedimento próprio e não devem ser simulados com montantes negativos."
+        ],
+        [
+          "p",
+          "Conservar valor, referência, data, documento, ator e saldo; ligar a evidência do extrato sem expor dados desnecessários."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Valor superior ao saldo, referência repetida ou cliente incorreto é recusado e revisto. Pagamentos históricos migrados devem ser reconciliados, evitando registar novamente valores já recebidos."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ29 REQ30   US32 US33"
+        ],
+        [
+          "p",
+          "Extensão de produção  Implementar importação de extrato, propostas de correspondência e autorização de estornos antes de uso financeiro em escala."
+        ]
+      ]
+    },
+    {
+      "title": "SOP12 Administrar utilizadores e responsabilidades",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP12   Responsável Administrador executa; gerente autoriza funções."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Uma pessoa entra, muda de responsabilidade, deixa a empresa ou necessita de acesso revisto."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Existe decisão de Sergiu, identidade da pessoa e funções necessárias; administrador autenticado."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Registar pedido e decisão sobre acesso. Confirmar pessoa e necessidade; não criar contas partilhadas."
+        ],
+        [
+          "p",
+          "2. Criar conta nominal e atribuir um perfil aprovado. Associar a conta motorista aos serviços aplicáveis. Só gerente gere contas de gerente."
+        ],
+        [
+          "p",
+          "3. Entregar credencial pelo canal aprovado e orientar a pessoa para alterar a palavra passe. Não guardar a palavra passe no procedimento."
+        ],
+        [
+          "p",
+          "4. Testar acesso permitido e recusa de tarefa indevida. Verificar que administrador não recebe poder comercial por omissão."
+        ],
+        [
+          "p",
+          "5. Quando muda a função, rever perfil, sessões e responsabilidade de registos pendentes."
+        ],
+        [
+          "p",
+          "6. Na saída, desativar conta, transferir tarefas e conferir recusa de acesso. Manter histórico da pessoa."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "Sergiu autoriza atribuições e acumulações; administrador executa tecnicamente. O piloto deve conservar a referência da decisão em observações ou histórico."
+        ],
+        [
+          "p",
+          "Conservar pedido, decisão, pessoa, perfis, associação, data de ativação ou desativação e testes de acesso."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Não remover o último gerente ativo sem sucessão aprovada. Suspeita de acesso indevido exige desativação ou revogação pelo procedimento disponível e escalonamento imediato. Recuperação de conta não deve revelar a palavra passe antiga."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ01 REQ02 REQ03 REQ06   US01 US02 US03 US04 US38 US39"
+        ],
+        [
+          "p",
+          "Extensão de produção  Adicionar convite com prazo, MFA, recuperação segura e revogação central de sessões. Revisões periódicas ficam registadas."
+        ]
+      ]
+    },
+    {
+      "title": "SOP13 Criar cópia e testar recuperação",
+      "items": [
+        [
+          "p",
+          "Procedimento SOP13   Responsável Gerente exporta; administrador executa a recuperação autorizada."
+        ],
+        [
+          "h",
+          "Quando executar"
+        ],
+        [
+          "p",
+          "Antes de migração ou atualização, segundo calendário de cópias, ou quando há perda ou corrupção."
+        ],
+        [
+          "h",
+          "Condições de início"
+        ],
+        [
+          "p",
+          "Existe acesso autorizado à cópia completa e localização restrita. Conhecem-se versão da aplicação e momento da cópia."
+        ],
+        [
+          "h",
+          "Passos"
+        ],
+        [
+          "p",
+          "1. Criar cópia pelo mecanismo autorizado. Para cópia manual, parar a aplicação antes de copiar a base completa e reiniciar depois."
+        ],
+        [
+          "p",
+          "2. Registar data, versão, ficheiro, localização, responsável e resultado. Conservar a cópia anterior à migração."
+        ],
+        [
+          "p",
+          "3. Guardar cópia fora da pasta operacional e restringir acesso; contas e histórico também contêm informação sensível."
+        ],
+        [
+          "p",
+          "4. Testar numa cópia separada da aplicação. Parar o serviço, preservar a base atual e colocar a cópia de teste no caminho indicado no guia técnico."
+        ],
+        [
+          "p",
+          "5. Iniciar a cópia de teste e conferir contas, clientes, serviços, decisões, provas, minutas, recebimentos e saldo. Não testar por cima da única base de trabalho."
+        ],
+        [
+          "p",
+          "6. Sergiu aceita o resultado ou decide recuperação real. Registar período eventualmente perdido e reconciliar operações efetuadas depois da cópia."
+        ],
+        [
+          "h",
+          "Aprovação e evidência"
+        ],
+        [
+          "p",
+          "A recuperação real exige decisão de Sergiu. O administrador verifica integridade antes de reabrir acesso e conserva a base anterior à recuperação."
+        ],
+        [
+          "p",
+          "Conservar cópia, registo do ensaio, verificações, decisão e tempo medido. A cópia no mesmo computador não protege por si só contra perda desse computador."
+        ],
+        [
+          "h",
+          "Exceção e escalonamento"
+        ],
+        [
+          "p",
+          "Cópia incompleta ou falha de acesso impede recuperação. Manter evidência, suspender gravações e escalar. Não editar diretamente o JSON para corrigir saldos sem diagnóstico e plano de recuperação."
+        ],
+        [
+          "p",
+          "Rastreabilidade  REQ32 REQ33 REQ34   US35 US36 US37"
+        ],
+        [
+          "p",
+          "Extensão de produção  Automatizar cópias cifradas, política de conservação, recuperação transacional e monitorização. Validar objetivos de perda de dados e tempo de recuperação."
+        ]
+      ]
+    },
+    {
+      "title": "Modelos de registo e revisão diária",
+      "items": [
+        [
+          "h",
+          "Registo de aprovação"
+        ],
+        [
+          "p",
+          "Entidade e referência  ____________________   Versão  __________\nRequerente  ____________________   Data do pedido  __________\nDecisor  ____________________   Data da decisão  __________\nResultado  Aprovado ou Rejeitado\nMotivo  _____________________________________________________\nExceção explícita do proprietário  Sim ou Não\nJustificação da acumulação de funções  _________________________"
+        ],
+        [
+          "h",
+          "Registo de incidente"
+        ],
+        [
+          "p",
+          "Serviço ou veículo  ____________________   Momento  __________\nLocal e descrição  ____________________________________________\nResponsável de acompanhamento  ______________________________\nEvidência de referência  _______________________________________\nDecisão e instrução seguinte  __________________________________\nResultado e momento de fecho  _________________________________"
+        ],
+        [
+          "h",
+          "Registo de cópia e recuperação"
+        ],
+        [
+          "p",
+          "Versão e data da cópia  _______________________________________\nFicheiro e localização restrita  _________________________________\nOperador  ____________________   Resultado  __________________\nConta e acessos verificados  ___________________________________\nRelações e saldos verificados  __________________________________\nTempo de recuperação medido  _________________________________\nDecisão do gerente e referência  _______________________________"
+        ],
+        [
+          "h",
+          "Revisão no fim do dia"
+        ],
+        [
+          "b",
+          [
+            "Operações revê serviços sem atualização, recursos indisponíveis e entregas sem prova.",
+            "Parque compara presenças e posições com a realidade.",
+            "Oficina revê ordens bloqueadas, aprovações e pedidos de libertação.",
+            "Financeiro revê minutas pendentes, referências de pagamentos e saldos.",
+            "Gerente revê decisões pendentes e exceções do proprietário.",
+            "Administrador confirma cópia, falhas e acessos que exigem revisão."
+          ]
+        ]
+      ]
+    }
+  ],
+  "03_Backlog_e_plano_de_sprints": [
+    {
+      "title": "Backlog e plano de sprints da plataforma TSS",
+      "items": [
+        [
+          "p",
+          "Este backlog transforma os requisitos em 44 histórias verificáveis para CRM, TMS, YMS, oficina, financeiro e plataforma. O plano propõe dez sprints de duas semanas. É uma sequência de trabalho a estimar com a equipa, sem compromisso de prazo, orçamento ou capacidade."
+        ],
+        [
+          "table",
+          [
+            "Controlo",
+            "Valor"
+          ],
+          [
+            [
+              "Responsável de produto",
+              "Sergiu Sandu"
+            ],
+            [
+              "Versão e data",
+              "1.0   30 setembro 2026"
+            ],
+            [
+              "Cadência proposta",
+              "Duas semanas por sprint"
+            ],
+            [
+              "Dimensão",
+              "44 histórias e 39 requisitos"
+            ],
+            [
+              "Entrega local",
+              "Validação de fluxos com Sergiu"
+            ],
+            [
+              "Entrega de produção",
+              "Depende de integrações e verificações explícitas"
+            ]
+          ],
+          [
+            140,
+            328
+          ]
+        ],
+        [
+          "h",
+          "Prioridades"
+        ],
+        [
+          "p",
+          "P0 identifica controlo ou capacidade necessária ao objetivo da fase. P1 identifica melhoria que pode ser adiada se a capacidade for insuficiente. Não atribuir pontos ou dias às histórias sem discussão técnica e validação do âmbito."
+        ],
+        [
+          "h",
+          "Responsabilidades da equipa"
+        ],
+        [
+          "p",
+          "Sergiu prioriza, decide âmbito e aceita comportamento. Desenvolvimento implementa e apresenta evidência. Qualidade valida critérios e regressão relevante. Os representantes de comercial, operações, parque, oficina e financeiro validam o respetivo processo quando forem designados. As posições permanecem por atribuir."
+        ],
+        [
+          "h",
+          "Leitura da fase"
+        ],
+        [
+          "p",
+          "Local corresponde ao âmbito do piloto. Produção exige desenvolvimento e validação adicional. Local e produção contém uma capacidade do piloto e uma extensão posterior explicitada nos critérios. Uma história só é concluída quando a evidência da versão demonstra os critérios; documentação não equivale a implementação."
+        ],
+        [
+          "p",
+          "A numeração dos sprints organiza dependências. A indisponibilidade de oficina é uma exceção importante: o bloqueio mínimo de US25 tem de existir antes da aceitação de US14, mesmo que o módulo completo seja aprofundado no sprint 7."
+        ]
+      ]
+    },
+    {
+      "title": "Regras de preparação e conclusão",
+      "items": [
+        [
+          "h",
+          "Antes de iniciar uma história"
+        ],
+        [
+          "b",
+          [
+            "Confirmar quem utiliza a função, que problema resolve e qual é a fase.",
+            "Rever requisito, critérios, dados necessários e dependências.",
+            "Clarificar regra de autorização e efeito sobre estados, valores e histórico.",
+            "Escolher dados de teste sem inventar pessoas reais ou limiares de aprovação.",
+            "Dividir história quando integração, segurança ou dados a tornam demasiado grande."
+          ]
+        ],
+        [
+          "h",
+          "Para considerar a história concluída"
+        ],
+        [
+          "b",
+          [
+            "Os critérios de aceitação passam e a evidência está ligada à versão.",
+            "As operações são validadas no servidor e respeitam o perfil e o alcance do registo.",
+            "Estados, valores e referências mantêm integridade, incluindo repetição da ação.",
+            "Interface em português, euros e mensagens compreensíveis.",
+            "Persistência e migração são verificadas quando afetadas.",
+            "O SOP e o guia do utilizador refletem o comportamento entregue.",
+            "Sergiu aceita o resultado da fase e identifica extensões ainda pendentes."
+          ]
+        ],
+        [
+          "h",
+          "Ritmo de cada sprint"
+        ],
+        [
+          "p",
+          "No planeamento, selecionar histórias pela capacidade e dependências. Durante o trabalho, acompanhar bloqueios e demonstrações curtas. No final, apresentar os critérios com dados de teste, recolher decisão de Sergiu e rever falhas de processo. Transportar histórias incompletas com estado claro; não declarar concluída uma integração apenas desenhada."
+        ],
+        [
+          "h",
+          "Evidência mínima"
+        ],
+        [
+          "p",
+          "Conservar ID da história, versão, cenário, dados utilizados, resultado esperado, resultado observado e responsável da revisão. Para segurança, incluir chamadas diretas à API e testes de acesso alheio. Para financeiro, incluir pagamento parcial, integral, duplicado e superior ao saldo. Para continuidade, incluir recuperação de cópia em ambiente separado."
+        ]
+      ]
+    },
+    {
+      "title": "Sequência proposta de sprints",
+      "items": [
+        [
+          "table",
+          [
+            "Sprint",
+            "Objetivo",
+            "Histórias"
+          ],
+          [
+            [
+              "1",
+              "Identidades e acesso",
+              "US01 US02 US03 US04"
+            ],
+            [
+              "2",
+              "Decisões e relação comercial",
+              "US05 US06 US07 US08"
+            ],
+            [
+              "3",
+              "Crédito e cotação aceite",
+              "US09 US10 US11 US12"
+            ],
+            [
+              "4",
+              "Planeamento e execução",
+              "US13 US14 US15 US16"
+            ],
+            [
+              "5",
+              "Prova incidentes e cancelamento",
+              "US17 US18 US19 US20"
+            ],
+            [
+              "6",
+              "Parque",
+              "US21 US22 US23 US24"
+            ],
+            [
+              "7",
+              "Oficina",
+              "US25 US26 US27 US28"
+            ],
+            [
+              "8",
+              "Documentos e recebimentos",
+              "US29 US30 US31 US32"
+            ],
+            [
+              "9",
+              "Migração recuperação e integração fiscal",
+              "US33 US34 US35 US36 US37"
+            ],
+            [
+              "10",
+              "Preparação da produção",
+              "US38 US39 US40 US41 US42 US43 US44"
+            ]
+          ],
+          [
+            49,
+            210,
+            209
+          ]
+        ],
+        [
+          "h",
+          "Dependências externas"
+        ],
+        [
+          "b",
+          [
+            "Escolha de sistema de faturação e validação pelo contabilista antes da integração fiscal real.",
+            "Escolha de infraestrutura, base de dados, autenticação e suporte antes do acesso remoto.",
+            "Inventário e classificação de dados antes de conservação e eliminação em produção.",
+            "Cadastros reais de veículos, motoristas e posições do parque antes da aceitação operacional.",
+            "Acesso contratado a telemática, banca ou outros serviços antes de conectores reais."
+          ]
+        ],
+        [
+          "p",
+          "A sequência totaliza aproximadamente vinte semanas se uma equipa tiver capacidade para completar cada sprint. A estimativa deve ser revista depois do primeiro sprint e de conhecer integrações e dados. Segurança, concorrência e integração fiscal podem exigir sprints adicionais."
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 1 Identidades e acesso",
+      "items": [
+        [
+          "p",
+          "Objetivo  Configuração, entrada, perfis e alcance do motorista."
+        ],
+        [
+          "p",
+          "Revisão de saída  Demonstrar recusas na API e no ecrã."
+        ],
+        [
+          "h",
+          "US01 criar a minha conta inicial sem contas partilhadas"
+        ],
+        [
+          "p",
+          "Como gerente, quero criar a minha conta inicial sem contas partilhadas para identificar cada ação."
+        ],
+        [
+          "p",
+          "Módulo Acessos   Prioridade P0   Fase Local   Requisitos REQ01"
+        ],
+        [
+          "b",
+          [
+            "A primeira configuração cria apenas Sergiu com credencial escolhida.",
+            "Novo arranque mantém a conta e não repete a configuração."
+          ]
+        ],
+        [
+          "h",
+          "US02 entrar sair e mudar a palavra passe"
+        ],
+        [
+          "p",
+          "Como utilizador, quero entrar sair e mudar a palavra passe para proteger o acesso."
+        ],
+        [
+          "p",
+          "Módulo Acessos   Prioridade P0   Fase Local   Requisitos REQ02"
+        ],
+        [
+          "b",
+          [
+            "Credencial errada é recusada; palavra passe não fica em texto simples.",
+            "Saída e expiração impedem novos pedidos com sessão inválida."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US01"
+        ],
+        [
+          "h",
+          "US03 atribuir perfis e desativar contas"
+        ],
+        [
+          "p",
+          "Como administrador, quero atribuir perfis e desativar contas para manter responsabilidades atuais."
+        ],
+        [
+          "p",
+          "Módulo Acessos   Prioridade P0   Fase Local   Requisitos REQ03"
+        ],
+        [
+          "b",
+          [
+            "Perfis válidos são guardados e usados pelo servidor.",
+            "Conta desativada perde acesso e conserva histórico."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US01"
+        ],
+        [
+          "h",
+          "US04 consultar apenas os meus serviços"
+        ],
+        [
+          "p",
+          "Como motorista, quero consultar apenas os meus serviços para proteger dados de outros serviços."
+        ],
+        [
+          "p",
+          "Módulo Acessos   Prioridade P0   Fase Local   Requisitos REQ03"
+        ],
+        [
+          "b",
+          [
+            "Serviço atribuído é acessível no ecrã e na API.",
+            "Identificador de serviço alheio é recusado e não aparece no CSV."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 2 Decisões e relação comercial",
+      "items": [
+        [
+          "p",
+          "Objetivo  Aprovações, histórico e cliente; desenho de oportunidades."
+        ],
+        [
+          "p",
+          "Revisão de saída  Sergiu revê responsabilidades e a exceção do proprietário."
+        ],
+        [
+          "h",
+          "US05 decidir pedidos com separação de funções"
+        ],
+        [
+          "p",
+          "Como gerente, quero decidir pedidos com separação de funções para tornar a decisão verificável."
+        ],
+        [
+          "p",
+          "Módulo Aprovações   Prioridade P0   Fase Local   Requisitos REQ04"
+        ],
+        [
+          "b",
+          [
+            "Autoaprovação normal é recusada.",
+            "Exceção explícita do proprietário exige 20 caracteres e grava requerente, ator, data e motivo."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ],
+        [
+          "h",
+          "US06 consultar decisões e alterações"
+        ],
+        [
+          "p",
+          "Como auditor, quero consultar decisões e alterações para seguir a origem de um registo."
+        ],
+        [
+          "p",
+          "Módulo Histórico   Prioridade P0   Fase Local   Requisitos REQ05"
+        ],
+        [
+          "b",
+          [
+            "Ação autorizada gera evento ligado à entidade e ao ator.",
+            "Auditor consulta histórico e não altera registos."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ],
+        [
+          "h",
+          "US07 registar uma ficha de cliente"
+        ],
+        [
+          "p",
+          "Como comercial, quero registar uma ficha de cliente para reutilizar os dados comerciais."
+        ],
+        [
+          "p",
+          "Módulo CRM   Prioridade P0   Fase Local   Requisitos REQ07"
+        ],
+        [
+          "b",
+          [
+            "Campos essenciais validados e pesquisa antes da criação.",
+            "Cliente mantém identificador estável em cotações e serviços."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ],
+        [
+          "h",
+          "US08 acompanhar oportunidades e contactos"
+        ],
+        [
+          "p",
+          "Como comercial, quero acompanhar oportunidades e contactos para saber o próximo passo comercial."
+        ],
+        [
+          "p",
+          "Módulo CRM   Prioridade P1   Fase Produção   Requisitos REQ08"
+        ],
+        [
+          "b",
+          [
+            "Cada oportunidade tem etapa, responsável e tarefa seguinte.",
+            "Contacto fica ligado ao cliente com data e resultado."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US07"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 3 Crédito e cotação aceite",
+      "items": [
+        [
+          "p",
+          "Objetivo  Pedido de crédito, cotação, aprovação, aceitação e conversão."
+        ],
+        [
+          "p",
+          "Revisão de saída  Uma cotação aceite gera um único serviço rastreável."
+        ],
+        [
+          "h",
+          "US09 pedir alteração de limite de crédito"
+        ],
+        [
+          "p",
+          "Como comercial, quero pedir alteração de limite de crédito para usar condições aprovadas."
+        ],
+        [
+          "p",
+          "Módulo CRM   Prioridade P0   Fase Local   Requisitos REQ09"
+        ],
+        [
+          "b",
+          [
+            "Pedido conserva limite anterior, proposto e justificação com apoio financeiro.",
+            "Só gerente decide e o novo valor aparece após aprovação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US07"
+        ],
+        [
+          "h",
+          "US10 preparar cotação com percurso datas e preço"
+        ],
+        [
+          "p",
+          "Como comercial, quero preparar cotação com percurso datas e preço para propor um serviço definido."
+        ],
+        [
+          "p",
+          "Módulo CRM   Prioridade P0   Fase Local   Requisitos REQ10"
+        ],
+        [
+          "b",
+          [
+            "Cliente, locais, datas e valor em euros são obrigatórios.",
+            "Rascunho permite revisão sem marcar aceitação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US07"
+        ],
+        [
+          "h",
+          "US11 aprovar ou rejeitar uma cotação"
+        ],
+        [
+          "p",
+          "Como gerente, quero aprovar ou rejeitar uma cotação para autorizar o compromisso comercial."
+        ],
+        [
+          "p",
+          "Módulo CRM   Prioridade P0   Fase Local   Requisitos REQ10"
+        ],
+        [
+          "b",
+          [
+            "Só cotação Em aprovação admite decisão.",
+            "Decisão grava motivo e segue a regra de autoaprovação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US10"
+        ],
+        [
+          "h",
+          "US12 converter cotação aceite em serviço"
+        ],
+        [
+          "p",
+          "Como operacoes, quero converter cotação aceite em serviço para manter origem comercial."
+        ],
+        [
+          "p",
+          "Módulo CRM TMS   Prioridade P0   Fase Local   Requisitos REQ11"
+        ],
+        [
+          "b",
+          [
+            "Aceitação exige cotação aprovada e referência do cliente.",
+            "Uma conversão cria um serviço e repetição não duplica."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US11"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 4 Planeamento e execução",
+      "items": [
+        [
+          "p",
+          "Objetivo  Recursos, despacho, estados e disponibilidade da oficina."
+        ],
+        [
+          "p",
+          "Revisão de saída  Resolver dependência de US25 com bloqueio mínimo antes de fechar US14."
+        ],
+        [
+          "h",
+          "US13 manter ficha completa de serviço"
+        ],
+        [
+          "p",
+          "Como operacoes, quero manter ficha completa de serviço para acompanhar a execução."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ12"
+        ],
+        [
+          "b",
+          [
+            "Cliente, locais, datas, valor e estado são validados.",
+            "Os recursos e a cotação de origem permanecem ligados."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US12"
+        ],
+        [
+          "h",
+          "US14 atribuir veículo e motorista disponíveis"
+        ],
+        [
+          "p",
+          "Como operacoes, quero atribuir veículo e motorista disponíveis para evitar conflitos."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local e produção   Requisitos REQ13"
+        ],
+        [
+          "b",
+          [
+            "Piloto recusa sobreposição de dias completos no despacho e início; produção valida também no planeamento.",
+            "Veículo com ordem ativa de oficina fica indisponível."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US13 US25"
+        ],
+        [
+          "h",
+          "US15 despachar o serviço pronto"
+        ],
+        [
+          "p",
+          "Como operacoes, quero despachar o serviço pronto para registar autorização operacional."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ14"
+        ],
+        [
+          "b",
+          [
+            "Sem motorista, matrícula, estado válido ou com presença ativa no parque o despacho é recusado.",
+            "Hora do despacho é gravada uma vez sem iniciar entrega."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US14"
+        ],
+        [
+          "h",
+          "US16 iniciar e concluir o serviço atribuído"
+        ],
+        [
+          "p",
+          "Como motorista, quero iniciar e concluir o serviço atribuído para manter estado coerente."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ15"
+        ],
+        [
+          "b",
+          [
+            "Só transições permitidas são aceites.",
+            "Conclusão exige prova com destinatário e referência."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US04 US15"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 5 Prova incidentes e cancelamento",
+      "items": [
+        [
+          "p",
+          "Objetivo  Prova, acompanhamento, cancelamento, pesquisa e exportação."
+        ],
+        [
+          "p",
+          "Revisão de saída  Sem prova não há conclusão elegível para minuta."
+        ],
+        [
+          "h",
+          "US17 rever a prova de entrega"
+        ],
+        [
+          "p",
+          "Como operacoes, quero rever a prova de entrega para preparar cobrança com evidência."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ15"
+        ],
+        [
+          "b",
+          [
+            "Prova fica ligada ao serviço correto.",
+            "Serviço histórico concluído sem prova permite registo e revisão antes da minuta."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US16"
+        ],
+        [
+          "h",
+          "US18 registar incidentes com evidência"
+        ],
+        [
+          "p",
+          "Como motorista, quero registar incidentes com evidência para obter uma instrução acompanhada."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P1   Fase Produção   Requisitos REQ16"
+        ],
+        [
+          "b",
+          [
+            "Tipo, momento e descrição são obrigatórios.",
+            "Operações atribui acompanhamento e decisão com histórico."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US16"
+        ],
+        [
+          "h",
+          "US19 decidir um cancelamento pedido"
+        ],
+        [
+          "p",
+          "Como gerente, quero decidir um cancelamento pedido para preservar compromissos e histórico."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ17"
+        ],
+        [
+          "b",
+          [
+            "Operações pede com motivo e gerente decide.",
+            "Ação repetida não altera duas vezes nem apaga relações financeiras."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US13"
+        ],
+        [
+          "h",
+          "US20 pesquisar filtrar e exportar serviços"
+        ],
+        [
+          "p",
+          "Como utilizador, quero pesquisar filtrar e exportar serviços para obter uma lista útil."
+        ],
+        [
+          "p",
+          "Módulo TMS   Prioridade P0   Fase Local   Requisitos REQ18"
+        ],
+        [
+          "b",
+          [
+            "Filtros combinados limitam os resultados visíveis.",
+            "CSV preserva euros, acentos e apenas registos autorizados."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03 US13"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 6 Parque",
+      "items": [
+        [
+          "p",
+          "Objetivo  Presenças, posições, movimentos, saída e capacidade."
+        ],
+        [
+          "p",
+          "Revisão de saída  Conferir ocupação real e recusar movimentos incompatíveis."
+        ],
+        [
+          "h",
+          "US21 registar entrada numa posição livre"
+        ],
+        [
+          "p",
+          "Como parque, quero registar entrada numa posição livre para saber que veículos estão no parque."
+        ],
+        [
+          "p",
+          "Módulo YMS   Prioridade P0   Fase Local e produção   Requisitos REQ19"
+        ],
+        [
+          "b",
+          [
+            "Uma presença ativa por veículo e posição exclusiva, ligada ao serviço.",
+            "Entrada grava instante e operador; portão fica em observação no piloto e em campo próprio na produção."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ],
+        [
+          "h",
+          "US22 mover presença para nova posição"
+        ],
+        [
+          "p",
+          "Como parque, quero mover presença para nova posição para manter localização correta."
+        ],
+        [
+          "p",
+          "Módulo YMS   Prioridade P0   Fase Local   Requisitos REQ20"
+        ],
+        [
+          "b",
+          [
+            "Destino ocupado é recusado.",
+            "Movimento conserva origem, destino, ator e momento."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US21"
+        ],
+        [
+          "h",
+          "US23 registar saída autorizada"
+        ],
+        [
+          "p",
+          "Como parque, quero registar saída autorizada para libertar a posição corretamente."
+        ],
+        [
+          "p",
+          "Módulo YMS   Prioridade P0   Fase Local   Requisitos REQ21"
+        ],
+        [
+          "b",
+          [
+            "Sem presença ativa ou com bloqueio operacional a saída é recusada.",
+            "Saída termina presença e repetição não cria outro evento."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US21 US25"
+        ],
+        [
+          "h",
+          "US24 configurar capacidade e reservas do parque"
+        ],
+        [
+          "p",
+          "Como operacoes, quero configurar capacidade e reservas do parque para planear chegada e espaço."
+        ],
+        [
+          "p",
+          "Módulo YMS   Prioridade P1   Fase Produção   Requisitos REQ22"
+        ],
+        [
+          "b",
+          [
+            "Posições operacionais e capacidade são configuráveis.",
+            "Reserva em conflito produz indicação e impede sobreocupação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US21"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 7 Oficina",
+      "items": [
+        [
+          "p",
+          "Objetivo  Ordens, aprovação, execução e libertação."
+        ],
+        [
+          "p",
+          "Revisão de saída  Despacho só retoma após tratamento de todos os bloqueios."
+        ],
+        [
+          "h",
+          "US25 abrir ordem ligada ao veículo"
+        ],
+        [
+          "p",
+          "Como oficina, quero abrir ordem ligada ao veículo para tornar visível a indisponibilidade."
+        ],
+        [
+          "p",
+          "Módulo Oficina   Prioridade P0   Fase Local   Requisitos REQ23"
+        ],
+        [
+          "b",
+          [
+            "Problema e estimativa são validados.",
+            "Ordem ativa bloqueia despacho até rejeição ou libertação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03"
+        ],
+        [
+          "h",
+          "US26 aprovar o orçamento da ordem"
+        ],
+        [
+          "p",
+          "Como gerente, quero aprovar o orçamento da ordem para autorizar os trabalhos."
+        ],
+        [
+          "p",
+          "Módulo Oficina   Prioridade P0   Fase Local   Requisitos REQ24"
+        ],
+        [
+          "b",
+          [
+            "Oficina submete; gerente aprova ou rejeita.",
+            "Início é recusado antes de aprovação válida."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US25"
+        ],
+        [
+          "h",
+          "US27 registar execução e conclusão"
+        ],
+        [
+          "p",
+          "Como oficina, quero registar execução e conclusão para demonstrar o trabalho realizado."
+        ],
+        [
+          "p",
+          "Módulo Oficina   Prioridade P0   Fase Local   Requisitos REQ24"
+        ],
+        [
+          "b",
+          [
+            "Ordem aprovada permite início e conclusão.",
+            "Conclusão exige custo efetivo, notas do trabalho e responsável rastreável."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US26"
+        ],
+        [
+          "h",
+          "US28 libertar veículo após conclusão"
+        ],
+        [
+          "p",
+          "Como gerente, quero libertar veículo após conclusão para devolver disponibilidade com decisão."
+        ],
+        [
+          "p",
+          "Módulo Oficina   Prioridade P0   Fase Local   Requisitos REQ25"
+        ],
+        [
+          "b",
+          [
+            "Só ordem Concluída permite libertação pelo gerente.",
+            "Quem concluiu não decide sem exceção explícita válida."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US27"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 8 Documentos e recebimentos",
+      "items": [
+        [
+          "p",
+          "Objetivo  Minutas internas, aprovação, emissão interna e reconciliação."
+        ],
+        [
+          "p",
+          "Revisão de saída  Parcial e integral mantêm saldo correto; não há emissão fiscal."
+        ],
+        [
+          "h",
+          "US29 acompanhar manutenção e peças"
+        ],
+        [
+          "p",
+          "Como oficina, quero acompanhar manutenção e peças para preparar revisões e stock."
+        ],
+        [
+          "p",
+          "Módulo Oficina   Prioridade P1   Fase Produção   Requisitos REQ26"
+        ],
+        [
+          "b",
+          [
+            "Plano cria vencimento por data ou quilometragem.",
+            "Consumo de peça altera stock e liga custo ao veículo."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US25"
+        ],
+        [
+          "h",
+          "US30 criar minuta ligada ao serviço concluído"
+        ],
+        [
+          "p",
+          "Como financeiro, quero criar minuta ligada ao serviço concluído para preparar cobrança rastreável."
+        ],
+        [
+          "p",
+          "Módulo Financeiro   Prioridade P0   Fase Local   Requisitos REQ27"
+        ],
+        [
+          "b",
+          [
+            "Sem conclusão ou prova a criação é recusada.",
+            "Uma minuta por serviço e valor igual ao preço válido."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US17"
+        ],
+        [
+          "h",
+          "US31 aprovar a minuta antes da emissão interna"
+        ],
+        [
+          "p",
+          "Como gerente, quero aprovar a minuta antes da emissão interna para controlar o valor a cobrar."
+        ],
+        [
+          "p",
+          "Módulo Financeiro   Prioridade P0   Fase Local   Requisitos REQ28"
+        ],
+        [
+          "b",
+          [
+            "Financeiro submete e gerente decide com motivo.",
+            "Emissão interna só aceita aprovada e identifica caráter não fiscal."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US05 US30"
+        ],
+        [
+          "h",
+          "US32 registar pagamentos parciais e integrais"
+        ],
+        [
+          "p",
+          "Como financeiro, quero registar pagamentos parciais e integrais para calcular saldo correto."
+        ],
+        [
+          "p",
+          "Módulo Financeiro   Prioridade P0   Fase Local   Requisitos REQ29"
+        ],
+        [
+          "b",
+          [
+            "Valor positivo até ao saldo e referência única.",
+            "Parcial mantém Emitida e serviço Parcial; saldo zero determina Paga e serviço Pago."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US31"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 9 Migração recuperação e integração fiscal",
+      "items": [
+        [
+          "p",
+          "Objetivo  Saldos, preservação de dados, restauro e desenho da integração."
+        ],
+        [
+          "p",
+          "Revisão de saída  A integração real depende do fornecedor escolhido e do contabilista."
+        ],
+        [
+          "h",
+          "US33 ver saldos e acompanhar vencidos"
+        ],
+        [
+          "p",
+          "Como financeiro, quero ver saldos e acompanhar vencidos para organizar cobranças."
+        ],
+        [
+          "p",
+          "Módulo Financeiro   Prioridade P0   Fase Local e produção   Requisitos REQ30"
+        ],
+        [
+          "b",
+          [
+            "Saldo deriva de recebimentos e não de campo livre.",
+            "Vencidos são identificados; extensão conserva contactos e próxima ação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US32"
+        ],
+        [
+          "h",
+          "US34 ligar documento fiscal externo ao serviço"
+        ],
+        [
+          "p",
+          "Como financeiro, quero ligar documento fiscal externo ao serviço para evitar dupla faturação real."
+        ],
+        [
+          "p",
+          "Módulo Financeiro   Prioridade P0   Fase Produção   Requisitos REQ31"
+        ],
+        [
+          "b",
+          [
+            "Integração usa referência externa e confirmação de emissão.",
+            "Falha e repetição não produzem emissão fiscal duplicada."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US31"
+        ],
+        [
+          "h",
+          "US35 migrar serviços existentes com cópia"
+        ],
+        [
+          "p",
+          "Como administrador, quero migrar serviços existentes com cópia para preservar trabalho anterior."
+        ],
+        [
+          "p",
+          "Módulo Dados   Prioridade P0   Fase Local   Requisitos REQ32"
+        ],
+        [
+          "b",
+          [
+            "Cópia exata anterior à migração é preservada.",
+            "Serviços permanecem e estado antigo de pagamento exige reconciliação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US13"
+        ],
+        [
+          "h",
+          "US36 exportar e restaurar cópia completa"
+        ],
+        [
+          "p",
+          "Como administrador, quero exportar e restaurar cópia completa para recuperar o sistema."
+        ],
+        [
+          "p",
+          "Módulo Continuidade   Prioridade P0   Fase Local e produção   Requisitos REQ33"
+        ],
+        [
+          "b",
+          [
+            "Exportação completa é restrita e inclui relações e contas.",
+            "Restauro de teste preserva acessos, histórico e saldos sem substituir a única base."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US35"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 9 Migração recuperação e integração fiscal continuação",
+      "items": [
+        [
+          "p",
+          "Continuação do objetivo  Saldos, preservação de dados, restauro e desenho da integração."
+        ],
+        [
+          "h",
+          "US37 validar o ciclo completo e recusas"
+        ],
+        [
+          "p",
+          "Como gerente, quero validar o ciclo completo e recusas para aceitar uma versão comprovada."
+        ],
+        [
+          "p",
+          "Módulo Qualidade   Prioridade P0   Fase Local e produção   Requisitos REQ34"
+        ],
+        [
+          "b",
+          [
+            "Ciclo completo e cenários negativos deixam evidência.",
+            "Defeito crítico impede decisão de produção."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US19 US23 US28 US32 US36"
+        ],
+        [
+          "h",
+          "Verificações que suportam US37"
+        ],
+        [
+          "b",
+          [
+            "Entrada e saída, expiração de sessão e desativação de conta.",
+            "Motorista tenta ver e alterar serviço alheio; outros perfis tentam decidir sem gerente.",
+            "Cotação convertida duas vezes e pagamento com referência repetida não duplicam registos.",
+            "Sem prova não há minuta; acima do saldo não há recebimento.",
+            "Veículo bloqueado não é despachado nem tem saída operacional.",
+            "Autoaprovação normal falha; exceção explícita regista motivo e requerente.",
+            "Cópia recuperada mantém relações, histórico e saldos.",
+            "Alterações concorrentes e falhas de integração pertencem à aceitação da produção."
+          ]
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 10 Preparação da produção",
+      "items": [
+        [
+          "p",
+          "Objetivo  Segurança remota, dados, concorrência, integrações e aceitação."
+        ],
+        [
+          "p",
+          "Revisão de saída  Replanear por capacidade; não assumir que todas as integrações cabem num sprint."
+        ],
+        [
+          "h",
+          "US38 usar HTTPS MFA e monitorização"
+        ],
+        [
+          "p",
+          "Como administrador, quero usar HTTPS MFA e monitorização para preparar acesso remoto seguro."
+        ],
+        [
+          "p",
+          "Módulo Segurança   Prioridade P0   Fase Produção   Requisitos REQ06"
+        ],
+        [
+          "b",
+          [
+            "Perfis privilegiados usam MFA e transporte HTTPS.",
+            "Falhas, revogação de sessão e tentativas abusivas são testadas."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US02 US03"
+        ],
+        [
+          "h",
+          "US39 recuperar acesso e confirmar ações sensíveis"
+        ],
+        [
+          "p",
+          "Como utilizador, quero recuperar acesso e confirmar ações sensíveis para manter a conta protegida."
+        ],
+        [
+          "p",
+          "Módulo Segurança   Prioridade P0   Fase Produção   Requisitos REQ06"
+        ],
+        [
+          "b",
+          [
+            "Recuperação usa verificação, prazo e utilização única.",
+            "Mudança sensível revoga sessões conforme política e é auditada."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US38"
+        ],
+        [
+          "h",
+          "US40 definir acesso conservação e pedidos"
+        ],
+        [
+          "p",
+          "Como gerente, quero definir acesso conservação e pedidos para tratar informação de forma controlada."
+        ],
+        [
+          "p",
+          "Módulo Dados pessoais   Prioridade P0   Fase Produção   Requisitos REQ35"
+        ],
+        [
+          "b",
+          [
+            "Inventário identifica finalidade, acesso e prazo proposto.",
+            "Pedido de titular e eliminação controlada têm responsáveis e evidência."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US03 US06"
+        ],
+        [
+          "h",
+          "US41 gravar em simultâneo sem perda"
+        ],
+        [
+          "p",
+          "Como operacoes, quero gravar em simultâneo sem perda para trabalhar com equipa."
+        ],
+        [
+          "p",
+          "Módulo Plataforma   Prioridade P0   Fase Produção   Requisitos REQ36"
+        ],
+        [
+          "b",
+          [
+            "Duas alterações concorrentes produzem conflito controlado ou transação válida.",
+            "Unicidade de pagamento e conversão resiste à concorrência."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US12 US32"
+        ]
+      ]
+    },
+    {
+      "title": "Sprint 10 Preparação da produção continuação",
+      "items": [
+        [
+          "p",
+          "Continuação do objetivo  Segurança remota, dados, concorrência, integrações e aceitação."
+        ],
+        [
+          "h",
+          "US42 receber eventos de serviços externos"
+        ],
+        [
+          "p",
+          "Como operacoes, quero receber eventos de serviços externos para evitar repetição manual."
+        ],
+        [
+          "p",
+          "Módulo Integrações   Prioridade P1   Fase Produção   Requisitos REQ37"
+        ],
+        [
+          "b",
+          [
+            "Evento tem origem e identificador e não duplica ao repetir.",
+            "Falhas permitem reprocessamento e reconciliação por responsável."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US41"
+        ],
+        [
+          "h",
+          "US43 treinar perfis e aceitar o piloto acompanhado"
+        ],
+        [
+          "p",
+          "Como gerente, quero treinar perfis e aceitar o piloto acompanhado para decidir entrada em produção."
+        ],
+        [
+          "p",
+          "Módulo Operação   Prioridade P0   Fase Produção   Requisitos REQ38"
+        ],
+        [
+          "b",
+          [
+            "Cada função executa SOP com evidência e resultado.",
+            "Gerente assina decisão ligada a versão, riscos e plano de recuperação."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US34 US37 US38 US40 US41"
+        ],
+        [
+          "h",
+          "US44 ver indicadores com definição e origem"
+        ],
+        [
+          "p",
+          "Como gerente, quero ver indicadores com definição e origem para acompanhar a atividade."
+        ],
+        [
+          "p",
+          "Módulo Gestão   Prioridade P1   Fase Produção   Requisitos REQ39"
+        ],
+        [
+          "b",
+          [
+            "Período e população do indicador são explícitos.",
+            "Valor pode ser conciliado com registos autorizados de origem."
+          ]
+        ],
+        [
+          "p",
+          "Depende de US13 US21 US27 US32"
+        ]
+      ]
+    },
+    {
+      "title": "Rastreabilidade dos requisitos",
+      "items": [
+        [
+          "p",
+          "Esta matriz liga o catálogo do documento de requisitos às histórias deste backlog. Cada história identifica também a fase, o perfil e os critérios que permitem validar a entrega."
+        ],
+        [
+          "table",
+          [
+            "Requisito",
+            "Histórias",
+            "Requisito",
+            "Histórias"
+          ],
+          [
+            [
+              "REQ01",
+              "US01",
+              "REQ21",
+              "US23"
+            ],
+            [
+              "REQ02",
+              "US02",
+              "REQ22",
+              "US24"
+            ],
+            [
+              "REQ03",
+              "US03 US04",
+              "REQ23",
+              "US25"
+            ],
+            [
+              "REQ04",
+              "US05",
+              "REQ24",
+              "US26 US27"
+            ],
+            [
+              "REQ05",
+              "US06",
+              "REQ25",
+              "US28"
+            ],
+            [
+              "REQ06",
+              "US38 US39",
+              "REQ26",
+              "US29"
+            ],
+            [
+              "REQ07",
+              "US07",
+              "REQ27",
+              "US30"
+            ],
+            [
+              "REQ08",
+              "US08",
+              "REQ28",
+              "US31"
+            ],
+            [
+              "REQ09",
+              "US09",
+              "REQ29",
+              "US32"
+            ],
+            [
+              "REQ10",
+              "US10 US11",
+              "REQ30",
+              "US33"
+            ],
+            [
+              "REQ11",
+              "US12",
+              "REQ31",
+              "US34"
+            ],
+            [
+              "REQ12",
+              "US13",
+              "REQ32",
+              "US35"
+            ],
+            [
+              "REQ13",
+              "US14",
+              "REQ33",
+              "US36"
+            ],
+            [
+              "REQ14",
+              "US15",
+              "REQ34",
+              "US37"
+            ],
+            [
+              "REQ15",
+              "US16 US17",
+              "REQ35",
+              "US40"
+            ],
+            [
+              "REQ16",
+              "US18",
+              "REQ36",
+              "US41"
+            ],
+            [
+              "REQ17",
+              "US19",
+              "REQ37",
+              "US42"
+            ],
+            [
+              "REQ18",
+              "US20",
+              "REQ38",
+              "US43"
+            ],
+            [
+              "REQ19",
+              "US21",
+              "REQ39",
+              "US44"
+            ],
+            [
+              "REQ20",
+              "US22",
+              "",
+              ""
+            ]
+          ],
+          [
+            68,
+            166,
+            68,
+            166
+          ]
+        ],
+        [
+          "h",
+          "Revisão de alterações"
+        ],
+        [
+          "p",
+          "Quando um requisito muda, atualizar as histórias ligadas, os procedimentos, o comportamento entregue e os testes afetados. Registar a decisão de Sergiu antes de alterar o âmbito comercial ou as responsabilidades de aprovação."
+        ]
+      ]
+    }
+  ]
+}

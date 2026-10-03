@@ -1,0 +1,361 @@
+{
+  "version": "1.0",
+  "requirements": [
+    {
+      "id": "REQ01",
+      "area": "Identidade",
+      "description": "Cada pessoa tem conta própria; a configuração inicial cria apenas a conta de Sergiu.",
+      "phase": "Local",
+      "stories": [
+        "US01"
+      ]
+    },
+    {
+      "id": "REQ02",
+      "area": "Autenticação",
+      "description": "Autenticação verificada no servidor, palavras passe derivadas com sal, saída e expiração de sessão.",
+      "phase": "Local",
+      "stories": [
+        "US02"
+      ]
+    },
+    {
+      "id": "REQ03",
+      "area": "Autorização",
+      "description": "Validar perfil e alcance de cada operação no servidor; motorista limitado aos serviços atribuídos.",
+      "phase": "Local",
+      "stories": [
+        "US03",
+        "US04"
+      ]
+    },
+    {
+      "id": "REQ04",
+      "area": "Aprovações",
+      "description": "Gerente aprova; autoaprovação normal rejeitada; exceção do proprietário exige motivo com 20 caracteres e histórico.",
+      "phase": "Local",
+      "stories": [
+        "US05"
+      ]
+    },
+    {
+      "id": "REQ05",
+      "area": "Histórico",
+      "description": "Guardar ator, ação, entidade, instante e motivo das ações e decisões; exportação autorizada.",
+      "phase": "Local",
+      "stories": [
+        "US06"
+      ]
+    },
+    {
+      "id": "REQ06",
+      "area": "Segurança em produção",
+      "description": "Implementar HTTPS, MFA para perfis privilegiados, recuperação segura, monitorização e gestão de segredos.",
+      "phase": "Produção",
+      "stories": [
+        "US38",
+        "US39"
+      ]
+    },
+    {
+      "id": "REQ07",
+      "area": "Clientes",
+      "description": "Ficha única com identificação, contactos, moradas, estado e observações; rejeitar duplicações evidentes.",
+      "phase": "Local parcial",
+      "stories": [
+        "US07"
+      ]
+    },
+    {
+      "id": "REQ08",
+      "area": "Relação comercial",
+      "description": "Oportunidades com responsável, etapa, tarefa seguinte e histórico de contactos ligados ao cliente.",
+      "phase": "Produção",
+      "stories": [
+        "US08"
+      ]
+    },
+    {
+      "id": "REQ09",
+      "area": "Crédito",
+      "description": "Alterar limite por pedido e decisão do gerente; valores e motivos registados sem limites de aprovação inventados.",
+      "phase": "Local",
+      "stories": [
+        "US09"
+      ]
+    },
+    {
+      "id": "REQ10",
+      "area": "Cotações",
+      "description": "Cliente, recolha, entrega, datas e preço em euros; enviar a aprovação antes da aceitação e conversão.",
+      "phase": "Local",
+      "stories": [
+        "US10",
+        "US11"
+      ]
+    },
+    {
+      "id": "REQ11",
+      "area": "Aceitação",
+      "description": "Aceitação com referência do cliente; criar um serviço a partir da cotação aceite sem duplicar a conversão.",
+      "phase": "Local",
+      "stories": [
+        "US12"
+      ]
+    },
+    {
+      "id": "REQ12",
+      "area": "Serviço",
+      "description": "Referência única e ligação ao cliente; datas, recolha, entrega, motorista, veículo, valor, estado e pagamento.",
+      "phase": "Local",
+      "stories": [
+        "US13"
+      ]
+    },
+    {
+      "id": "REQ13",
+      "area": "Planeamento",
+      "description": "Operações atribui recursos válidos; verificar conflitos de período e indisponibilidade da oficina.",
+      "phase": "Local parcial",
+      "stories": [
+        "US14"
+      ]
+    },
+    {
+      "id": "REQ14",
+      "area": "Despacho",
+      "description": "Despachar apenas serviço agendado com recursos atribuídos e veículo disponível; manter hora do despacho.",
+      "phase": "Local",
+      "stories": [
+        "US15"
+      ]
+    },
+    {
+      "id": "REQ15",
+      "area": "Execução",
+      "description": "Transições controladas de Agendado para Em curso e Concluído; registar prova de entrega antes de concluir.",
+      "phase": "Local",
+      "stories": [
+        "US16",
+        "US17"
+      ]
+    },
+    {
+      "id": "REQ16",
+      "area": "Incidentes",
+      "description": "Registar avaria, atraso, dano e falha de entrega com responsável, evidência e plano de resolução.",
+      "phase": "Produção",
+      "stories": [
+        "US18"
+      ]
+    },
+    {
+      "id": "REQ17",
+      "area": "Cancelamento",
+      "description": "Pedir cancelamento com motivo; somente decisão do gerente altera o estado final.",
+      "phase": "Local",
+      "stories": [
+        "US19"
+      ]
+    },
+    {
+      "id": "REQ18",
+      "area": "Pesquisa",
+      "description": "Pesquisar e combinar filtros; exportar apenas os registos autorizados e correspondentes aos filtros.",
+      "phase": "Local",
+      "stories": [
+        "US20"
+      ]
+    },
+    {
+      "id": "REQ19",
+      "area": "Parque",
+      "description": "Registar entrada, veículo, portão, instante e posição livre; uma presença ativa por veículo.",
+      "phase": "Local parcial",
+      "stories": [
+        "US21"
+      ]
+    },
+    {
+      "id": "REQ20",
+      "area": "Movimentação",
+      "description": "Transferir presença entre posições livres; guardar origem, destino, ator e instante.",
+      "phase": "Local",
+      "stories": [
+        "US22"
+      ]
+    },
+    {
+      "id": "REQ21",
+      "area": "Saída",
+      "description": "Registar saída uma vez; não admitir saída operacional de veículo bloqueado pela oficina.",
+      "phase": "Local",
+      "stories": [
+        "US23"
+      ]
+    },
+    {
+      "id": "REQ22",
+      "area": "Capacidade do parque",
+      "description": "Configurar posições, reservas e capacidade; impedir ocupações simultâneas em posição exclusiva.",
+      "phase": "Produção",
+      "stories": [
+        "US24"
+      ]
+    },
+    {
+      "id": "REQ23",
+      "area": "Oficina",
+      "description": "Ordem ligada ao veículo com problema, estimativa, prioridade e estado; bloquear despacho enquanto ativa.",
+      "phase": "Local parcial",
+      "stories": [
+        "US25"
+      ]
+    },
+    {
+      "id": "REQ24",
+      "area": "Trabalhos",
+      "description": "Submeter orçamento ao gerente; executar apenas ordem aprovada e registar conclusão e custo efetivo.",
+      "phase": "Local",
+      "stories": [
+        "US26",
+        "US27"
+      ]
+    },
+    {
+      "id": "REQ25",
+      "area": "Libertação",
+      "description": "Gerente liberta veículo após conclusão técnica e decisão documentada; separar de quem concluiu salvo exceção do proprietário.",
+      "phase": "Local",
+      "stories": [
+        "US28"
+      ]
+    },
+    {
+      "id": "REQ26",
+      "area": "Manutenção e peças",
+      "description": "Planos por tempo ou quilometragem, stock, consumos e alertas com histórico por veículo.",
+      "phase": "Produção",
+      "stories": [
+        "US29"
+      ]
+    },
+    {
+      "id": "REQ27",
+      "area": "Documento interno",
+      "description": "Criar uma minuta por serviço concluído com prova de entrega; valor ligado ao preço do serviço.",
+      "phase": "Local",
+      "stories": [
+        "US30"
+      ]
+    },
+    {
+      "id": "REQ28",
+      "area": "Aprovação financeira",
+      "description": "Submeter e aprovar antes de marcar emissão interna; correções preservam rastreabilidade.",
+      "phase": "Local",
+      "stories": [
+        "US31"
+      ]
+    },
+    {
+      "id": "REQ29",
+      "area": "Recebimentos",
+      "description": "Valor positivo, referência única e montante não superior ao saldo; suportar recebimento parcial e integral.",
+      "phase": "Local",
+      "stories": [
+        "US32"
+      ]
+    },
+    {
+      "id": "REQ30",
+      "area": "Cobranças",
+      "description": "Mostrar saldo e vencimento; lista de valores vencidos e seguimento de contactos com o cliente.",
+      "phase": "Local e produção",
+      "stories": [
+        "US33"
+      ]
+    },
+    {
+      "id": "REQ31",
+      "area": "Faturação externa",
+      "description": "Ligar a faturação real e contabilidade através de integração validada com o contabilista; piloto não emite documento fiscal.",
+      "phase": "Produção",
+      "stories": [
+        "US34"
+      ]
+    },
+    {
+      "id": "REQ32",
+      "area": "Persistência e migração",
+      "description": "Preservar serviços existentes e cópia anterior à migração; marcar informação histórica que exige revisão.",
+      "phase": "Local",
+      "stories": [
+        "US35"
+      ]
+    },
+    {
+      "id": "REQ33",
+      "area": "Cópias e recuperação",
+      "description": "Cópia exportável restrita e procedimento de restauro ensaiado, incluindo contas, histórico e relações.",
+      "phase": "Local e produção",
+      "stories": [
+        "US36"
+      ]
+    },
+    {
+      "id": "REQ34",
+      "area": "Qualidade",
+      "description": "Teste do ciclo completo, negativas por perfil, dupla decisão, duplicação de pagamento e conflito de recursos.",
+      "phase": "Local e produção",
+      "stories": [
+        "US37"
+      ]
+    },
+    {
+      "id": "REQ35",
+      "area": "Proteção de dados",
+      "description": "Definir finalidade, acesso, conservação, pedidos de titulares e eliminação controlada antes de dados reais em escala.",
+      "phase": "Produção",
+      "stories": [
+        "US40"
+      ]
+    },
+    {
+      "id": "REQ36",
+      "area": "Concorrência",
+      "description": "Migrar para base transacional, controlo de versão e unicidade; nenhuma perda sob alterações simultâneas.",
+      "phase": "Produção",
+      "stories": [
+        "US41"
+      ]
+    },
+    {
+      "id": "REQ37",
+      "area": "Integrações",
+      "description": "Conectores de telemática, documentos, correio e banca com reprocessamento seguro e reconciliação.",
+      "phase": "Produção",
+      "stories": [
+        "US42"
+      ]
+    },
+    {
+      "id": "REQ38",
+      "area": "Aceitação operacional",
+      "description": "Treinar cada perfil, validar procedimentos e executar piloto acompanhado antes de decisão de entrada em produção.",
+      "phase": "Produção",
+      "stories": [
+        "US43"
+      ]
+    },
+    {
+      "id": "REQ39",
+      "area": "Indicadores",
+      "description": "Painéis por período para pontualidade, saldo, ocupação e custo de oficina; definições e fonte acessíveis.",
+      "phase": "Produção",
+      "stories": [
+        "US44"
+      ]
+    }
+  ]
+}

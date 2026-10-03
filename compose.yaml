@@ -1,0 +1,106 @@
+services:
+  database:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: tss_staging
+      POSTGRES_USER: tss_local
+      POSTGRES_PASSWORD: local-staging-only
+    volumes:
+      - staging-database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U tss_local -d tss_staging"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  init:
+    build:
+      context: .
+      target: production
+    environment:
+      ENV_FILE: ""
+      STAGING_BOOTSTRAP: "1"
+      DATABASE_URL: postgresql://tss_local:local-staging-only@database:5432/tss_staging
+    command: [node, tools/staging-init.mjs]
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      target: production
+    environment:
+      ENV_FILE: ""
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "10000"
+      STORAGE_BACKEND: postgresql
+      DATABASE_URL: postgresql://tss_local:local-staging-only@database:5432/tss_staging
+      DATA_DIR: /var/data
+      ATTACHMENTS_DIR: /var/data/attachments
+      PUBLIC_ORIGIN: https://localhost:8443
+      TRUST_PROXY: "1"
+    volumes:
+      - type: volume
+        source: staging-uploads
+        target: /var/data
+        volume:
+          nocopy: true
+    depends_on:
+      database:
+        condition: service_healthy
+      init:
+        condition: service_completed_successfully
+    init: true
+
+  proxy:
+    image: caddy:2-alpine
+    ports:
+      - "127.0.0.1:8443:8443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - staging-certificates:/data
+      - staging-proxy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, --no-check-certificate, "https://localhost:8443/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  test-database:
+    image: postgres:16-bookworm
+    profiles: [tools]
+    environment:
+      POSTGRES_DB: tss_test
+      POSTGRES_USER: tss_test
+      POSTGRES_PASSWORD: local-tests-only
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U tss_test -d tss_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  test:
+    build:
+      context: .
+      target: test
+    profiles: [tools]
+    environment:
+      ENV_FILE: ""
+      TSS_TEST_DATABASE_URL: postgresql://tss_test:local-tests-only@test-database:5432/tss_test
+    depends_on:
+      test-database:
+        condition: service_healthy
+
+volumes:
+  staging-database:
+  staging-uploads:
+  staging-certificates:
+  staging-proxy-config:

@@ -1,0 +1,26 @@
+# Send only application sources and test fixtures to the build engine.
+*
+!Dockerfile
+!package.json
+!pnpm-lock.yaml
+!server.mjs
+!lib/
+!lib/**
+!public/
+!public/**
+!migrations/
+!migrations/**
+!tools/
+!tools/*.mjs
+!tests/
+!tests/**
+!documentacao/
+!documentacao/*.md
+!documentacao/*.pdf
+!documentacao/*.docx
+!deploy/
+!deploy/entrypoint.sh
+**/.env
+**/.env.*
+**/node_modules
+**/*.tmp
