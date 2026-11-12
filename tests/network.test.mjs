@@ -18,7 +18,12 @@ async function httpFixture(t, options = {}) {
   function call(path, { method = 'GET', body, headers = {} } = {}) {
     return new Promise((resolve, reject) => {
       const request = http.request({ hostname: '127.0.0.1', port: server.address().port, path, method, headers: { Host: `127.0.0.1:${server.address().port}`, 'X-TSS-Request': '1', 'Content-Type': 'application/json', ...headers } }, response => {
-        const chunks = []; response.on('data', chunk => chunks.push(chunk)); response.on('end', () => resolve({ status: response.statusCode, headers: response.headers, body: JSON.parse(Buffer.concat(chunks).toString()) }));
+        const chunks = [];
+        response.on('data', chunk => chunks.push(chunk));
+        response.on('end', () => {
+          const content = Buffer.concat(chunks).toString();
+          resolve({ status: response.statusCode, headers: response.headers, body: content ? JSON.parse(content) : null });
+        });
       }); request.on('error', reject); if (body) request.write(JSON.stringify(body)); request.end();
     });
   }
@@ -60,6 +65,21 @@ test('HTTPS proxy validates the canonical host and protocol, protects writes and
   const wrongLogin = { username: 'proxy', password: 'wrong password' };
   assert.equal((await invoke('/api/login', { method: 'POST', body: wrongLogin, headers: { 'X-Forwarded-For': '192.0.2.1' } })).status, 401);
   assert.equal((await invoke('/api/login', { method: 'POST', body: wrongLogin, headers: { 'X-Forwarded-For': '192.0.2.2' } })).status, 429);
+});
+
+test('The production apex redirects HTTPS reads to the tracker without accepting writes', async t => {
+  const { call } = await httpFixture(t, { network: { publicOrigin: 'https://app.tss-transportes.com', trustProxy: true } });
+  const apex = { Host: 'tss-transportes.com', 'X-Forwarded-Proto': 'https' };
+  const home = await call('/', { headers: apex });
+  assert.equal(home.status, 301);
+  assert.equal(home.headers.location, 'https://app.tss-transportes.com/');
+  const link = await call('//example.test/path?tab=jobs', { method: 'HEAD', headers: { ...apex, Host: 'TSS-TRANSPORTES.COM:443' } });
+  assert.equal(link.status, 301);
+  assert.equal(link.headers.location, 'https://app.tss-transportes.com//example.test/path?tab=jobs');
+  assert.equal((await call('/api/session', { headers: { ...apex, Host: 'app.tss-transportes.com' } })).status, 200);
+  assert.equal((await call('/api/session', { headers: { ...apex, Host: 'other.test', 'X-Forwarded-Host': apex.Host } })).status, 403);
+  assert.equal((await call('/api/session', { headers: { ...apex, 'X-Forwarded-Proto': 'http' } })).status, 403);
+  assert.equal((await call('/api/login', { method: 'POST', headers: apex })).status, 403);
 });
 
 test('Loopback HTTP keeps plain cookies and requires its local origin', async t => {
