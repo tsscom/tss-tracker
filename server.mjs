@@ -12,7 +12,7 @@ import { workflowView, updateWorkflowConfiguration } from './lib/workflows.mjs';
 import { saveVehicle, saveDriver, saveOpportunity, opportunityAction, saveActivity, saveCost, saveIncident, incidentAction } from './lib/operations.mjs';
 import { applyMobileOperation } from './lib/mobile-operations.mjs';
 import { authorizeJobDocument, saveAttachment, readAttachment, validatePodAttachments } from './lib/attachments.mjs';
-import { validateNetworkOptions, requestAuthority } from './lib/network.mjs';
+import { apexRedirectLocation, validateNetworkOptions, requestAuthority } from './lib/network.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const ASSETS = new Map([
@@ -94,6 +94,11 @@ export async function createTrackerServer({ dataFile = join(ROOT, 'data', 'jobs.
       if (request.method === 'GET' && request.url?.split('?')[0] === '/healthz') {
         try { await storage.read(); return send(response, 200, { status: 'ok' }); }
         catch { return send(response, 503, { status: 'unavailable' }); }
+      }
+      const redirectLocation = apexRedirectLocation(request, networkOptions);
+      if (redirectLocation) {
+        response.writeHead(301, { Location: redirectLocation });
+        return response.end();
       }
       const { secure, origin } = requestAuthority(request, server.address()?.port, networkOptions);
       const url = new URL(request.url, origin), path = url.pathname, api = path.startsWith('/api/'), writing = api && !['GET', 'HEAD'].includes(request.method);
